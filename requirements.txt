@@ -12,3 +12,4 @@ wordcloud
 matplotlib
 seaborn
 tqdm
+WhatsParser
