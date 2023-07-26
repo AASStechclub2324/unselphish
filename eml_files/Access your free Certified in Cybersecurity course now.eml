@@ -1,0 +1,83 @@
+Delivered-To: senguptasumitra48@gmail.com
+Received: by 2002:a05:6358:c691:b0:125:8db1:322 with SMTP id fe17csp3978965rwb;
+        Tue, 18 Jul 2023 14:45:11 -0700 (PDT)
+X-Google-Smtp-Source: APBJJlEZY23L5JY0UrQOkuRdkiJdorVpjFgKvDiEIRmEAiUIIKoomN1QQvJC1E1PamavdGrslBvx
+X-Received: by 2002:a05:620a:b93:b0:767:3c4c:9f1a with SMTP id k19-20020a05620a0b9300b007673c4c9f1amr940040qkh.27.1689716711246;
+        Tue, 18 Jul 2023 14:45:11 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1689716711; cv=none;
+        d=google.com; s=arc-20160816;
+        b=RSKiyGTBS00LDFxcoAAeOosW3B5l+9rw6c/lpNMMPtV9hXVnhq2YbuQn29qEnPzEge
+         OIIQx7KswatfFWn+a9MrEOwBj6WQhGpgoiwVJtEe0XUVap4ef1zG1exjfGyROG/hmBcs
+         0WA/WB7hrUjd5VHBdmZ5f2BceP51E65+KstKkB7HvV5Fwu8HKwl4OjOXq/u7+b4l8yGf
+         p1BR8oGcV7r/5zSP3mbHz0Y0K84LXfkyGd0szDB5/9LP6kEg5x6xl9hVmtNkJQSCgkJ1
+         azCMw2k8azHoLWpjKu15hTvFX1LTvlYxUmh0NCVxtLQ5zd8w0JysjhkIyAXJl8xeIE2P
+         +BjA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=content-transfer-encoding:content-id:mime-version:to:reply-to
+         :message-id:subject:date:from:dkim-signature;
+        bh=fikdLOzjTs4F4RIxhKYUE3glfVlqrfB78R6ftvAf5qQ=;
+        fh=qAmJrmErttDYihQNd1SLVe+W3ZJ6CRYvyQE+ccwoDJ0=;
+        b=LOiJ8WFO2TSWaghV0L8bBr+VWi33eOEmPwBwGlQPb37hGIAT1wJxgqU9B7q3oUlJr4
+         hIOtprJgnaOXAi9M1Iwc7LwGjCEzjZoXe832tWOAyj6jhgqnHo1+WOUt1x/l0rQHOnE3
+         up0nLCMpVr5Ysd7FEq/N7vDb5R39dFMk56e8ApHjt6ri9yHPTh1vQzxzvub8Tw2UxY3a
+         9efyiX0XvqplqMQgiTATr7cAd8VdWjzH5jVtYvG8+XMG/LrRq3zXJeZTx3js+y+QWQep
+         GtX/lo4Ch2zc+vuY4SYthXFNaizS1T33c1CDtLke++ODEGXDY0WteKMIjD1pUgpkfVyi
+         ERdA==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@brightspace.com header.s=d2lmail2 header.b=xUPlS28y;
+       spf=pass (google.com: domain of donotreply@isc2.brightspace.com designates 3.92.150.237 as permitted sender) smtp.mailfrom=donotreply@isc2.brightspace.com;
+       dmarc=pass (p=QUARANTINE sp=QUARANTINE dis=NONE) header.from=brightspace.com
+Return-Path: <donotreply@isc2.brightspace.com>
+Received: from us04psmtp.brightspace.com (us04psmtp.brightspace.com. [3.92.150.237])
+        by mx.google.com with ESMTPS id w22-20020ae9e516000000b00760983ea377si1682652qkf.8.2023.07.18.14.45.10
+        for <senguptasumitra48@gmail.com>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Jul 2023 14:45:11 -0700 (PDT)
+Received-SPF: pass (google.com: domain of donotreply@isc2.brightspace.com designates 3.92.150.237 as permitted sender) client-ip=3.92.150.237;
+Authentication-Results: mx.google.com;
+       dkim=pass header.i=@brightspace.com header.s=d2lmail2 header.b=xUPlS28y;
+       spf=pass (google.com: domain of donotreply@isc2.brightspace.com designates 3.92.150.237 as permitted sender) smtp.mailfrom=donotreply@isc2.brightspace.com;
+       dmarc=pass (p=QUARANTINE sp=QUARANTINE dis=NONE) header.from=brightspace.com
+Received: from [172.27.29.130] (unknown [172.27.29.130])
+	by us04psmtp002d.aue1.int.d2l (Postfix) with ESMTP id 285B440ACF
+	for <senguptasumitra48@gmail.com>; Tue, 18 Jul 2023 21:45:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/relaxed; d=brightspace.com;
+	s=d2lmail2; t=1689716710;
+	bh=fikdLOzjTs4F4RIxhKYUE3glfVlqrfB78R6ftvAf5qQ=;
+	h=From:Date:Subject:Reply-To:To:From;
+	b=xUPlS28ynl61Jk+jPW0uRcL0Psre4dsIzkNQUeaINJA4FLFgYgp3jjhjqlv5ILBD6
+	 v2PwfzfCY22BnOxTucSyfIvs8cKMPcOjDQDJ/mc9HzgmwwZiFosW7jCiGhU0lNXwm8
+	 kKHL8CU0DPZnnXVeJjnbXqoZoRQW6cZ3WGWXGno//yyNjeXFd1UM0awiG39cIAhIGo
+	 E4y/Q79DBteOyFIJzka5n0I6noHTt5O6pZIxWIsyuMLSuld2sRL1LrtLKwXpwcRybE
+	 LOZJgZ4JzA6OyuLIZ6HU88bm1IGTXp8xAqsNX2ZApAodFFhAnL/WEFRnjEWQlHn7H/
+	 HQZVuUqMkoRmQ==
+From: "learn@isc2.org" <donotreply@isc2.brightspace.com>
+Date: Tue, 18 Jul 2023 21:45:10 +0000
+Subject: Access your free Certified in Cybersecurity course now
+Message-Id: <N1DUNGQUHKU4.WA5FTR5VZCN51@US04PSN007AA62>
+Reply-To: learn@isc2.org
+To: senguptasumitra48@gmail.com
+MIME-Version: 1.0
+Content-Type: text/html; charset=utf-8
+Content-Id: <N1DUNGQUHKU4.CM4QQS1ITHNU3@US04PSN007AA62>
+Content-Transfer-Encoding: 8bit
+
+<?xml version="1.0" encoding="utf-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>	<title>Access your free Certified in Cybersecurity course now</title>	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/></head><body><p style="margin: 0in; font-size: 12pt; font-family: 'Times New Roman', serif;"><span class="normaltextrun"><span style="font-family: Calibri, sans-serif; color: black;">Mainak, </span></span><span class="eop"><span style="font-family: Calibri, sans-serif; color: black;">&nbsp;</span></span></p>
+<p style="margin: 0in; font-size: 12pt; font-family: 'Times New Roman', serif;"><span style="font-size: 9.0pt; font-family: 'Segoe UI', sans-serif;">&nbsp;</span></p>
+<p style="margin: 0in; font-size: 12pt; font-family: 'Times New Roman', serif;"><span class="normaltextrun"><span style="font-family: Calibri, sans-serif; color: black;">Congratulations on taking your first step toward getting Certified in Cybersecurity (CC) and becoming an ISC2 member! As the true entry point to career excellence, CC proves to employers that you have the foundational knowledge and skills necessary for an entry- or junior-level cybersecurity role.</span></span></p>
+<p style="margin: 0in; font-size: 12pt; font-family: 'Times New Roman', serif;"><span class="normaltextrun"><span style="font-family: Calibri, sans-serif; color: black;">&nbsp;</span></span></p>
+<p style="margin: 0in; font-size: 12pt; font-family: 'Times New Roman', serif;"><span class="normaltextrun"><span style="font-family: Calibri, sans-serif; color: black;">This free ISC2 Learn course will guide you through the topics covered on the CC exam so you’re ready to sit with confidence. Here’s what to do next:</span></span></p>
+<p style="margin: 0in; font-size: 12pt; font-family: 'Times New Roman', serif;"><span style="font-size: 9.0pt; font-family: 'Segoe UI', sans-serif; color: black;">&nbsp;</span></p>
+<p style="margin: 0in; font-size: 12pt; font-family: 'Times New Roman', serif;"><span class="normaltextrun"><b><span style="font-family: Calibri, sans-serif; color: black;">Step 1:</span></b></span><span class="normaltextrun"><span style="font-family: Calibri, sans-serif; color: black;"> </span></span><span class="normaltextrun"><span style="font-family: Calibri, sans-serif; color: black;">Go to </span></span><a rel="noopener" target="_blank" href="https://enroll.isc2.org/"><span class="normaltextrun"><span style="font-family: Calibri, sans-serif; color: #0563c1;">https://enroll.isc2.org/</span></span></a><span class="normaltextrun"><span style="font-family: Calibri, sans-serif; color: black;"> and log in. Click on “My Courses” and you’ll be directed to ISC2 Learn. </span></span><span class="eop"><span style="font-family: Calibri, sans-serif; color: black;">&nbsp;</span></span></p>
+<p style="margin: 0in; font-size: 12pt; font-family: 'Times New Roman', serif;"><span class="normaltextrun"><span style="font-family: Calibri, sans-serif; color: black;">&nbsp;</span></span></p>
+<p style="margin: 0in; font-size: 12pt; font-family: 'Times New Roman', serif;"><span class="normaltextrun"><b><span style="font-family: Calibri, sans-serif; color: black;">Step 2:</span></b></span><span class="normaltextrun"><span style="font-family: Calibri, sans-serif; color: black;"> Watch the brief navigation videos to become familiar with the learning platform. </span></span><span class="eop"><span style="font-family: Calibri, sans-serif; color: black;">&nbsp;</span></span></p>
+<p style="margin: 0in; font-size: 12pt; font-family: 'Times New Roman', serif;"><span class="normaltextrun"><span style="font-family: Calibri, sans-serif; color: black;">&nbsp;</span></span></p>
+<p style="margin: 0in; font-size: 12pt; font-family: 'Times New Roman', serif;"><span class="normaltextrun"><b><span style="font-family: Calibri, sans-serif; color: black;">Step 3:</span></b></span><span class="normaltextrun"><span style="font-family: Calibri, sans-serif; color: black;"> Click on the Official ISC2 CC Online Self-Paced Training - 1M icon under “My Courses.” Then click on the “Course Introduction” tile on the course homepage. To access the introductory module with information about your course, click on “Course Introduction” or the arrow button. </span></span><span class="eop"><span style="font-family: Calibri, sans-serif; color: black;">&nbsp;</span></span></p>
+<p style="margin: 0in; font-size: 12pt; font-family: 'Times New Roman', serif;"><span class="normaltextrun"><b><span style="font-family: Calibri, sans-serif; color: black;">&nbsp;</span></b></span></p>
+<p style="margin: 0in; font-size: 12pt; font-family: 'Times New Roman', serif;"><span class="normaltextrun"><b><span style="font-family: Calibri, sans-serif; color: black;">Step 4: </span></b></span><span class="normaltextrun"><span style="font-family: Calibri, sans-serif; color: black;">Set a target date for your exam and build out a clear timeline to stay on track and motivated.</span></span><span class="eop"><span style="font-family: Calibri, sans-serif;">&nbsp;When you’re confident you’re ready, schedule your CC exam at a Pearson VUE testing center using the free promo code.</span></span><span style="font-size: 9.0pt; font-family: 'Segoe UI', sans-serif;"><br><br></span></p>
+<p style="margin: 0in; font-size: 12pt; font-family: 'Times New Roman', serif;"><span class="normaltextrun"><span style="font-family: Calibri, sans-serif; color: black;">Access the course up to 180 days from the date you first enrolled. Generally, it requires about 10-14 hours to complete — go at your own pace. Dive deeper into areas where you need more support and skip those where you’re confident in your knowledge.</span></span></p>
+<p style="margin: 0in; font-size: 12pt; font-family: 'Times New Roman', serif;"><span style="font-size: 9.0pt; font-family: 'Segoe UI', sans-serif;">&nbsp;</span></p>
+<p style="margin: 0in; font-size: 12pt; font-family: 'Times New Roman', serif;"><span class="normaltextrun"><span style="font-family: Calibri, sans-serif; color: black;">For technical issues associated with the course, please visit the </span></span><a rel="noopener" target="_blank" href="https://community.brightspace.com/isc2/s/"><span class="normaltextrun"><span style="font-family: Calibri, sans-serif; color: #0563c1;">ISC2<sup>&nbsp;</sup>Learn Support Portal.</span></span></a><span class="normaltextrun"><span style="font-family: Calibri, sans-serif; color: black;"> </span></span><span class="eop"><span style="font-family: Calibri, sans-serif; color: black;">&nbsp;</span></span></p>
+<p style="margin: 0in; font-size: 12pt; font-family: 'Times New Roman', serif;"><span class="eop"><span style="font-family: Calibri, sans-serif; color: black;">&nbsp;</span></span></p>
+<p style="margin: 0in; font-size: 12pt; font-family: 'Times New Roman', serif;"><span class="normaltextrun"><span style="font-family: Calibri, sans-serif; color: black;">Thank you, </span></span><span class="eop"><span style="font-family: Calibri, sans-serif; color: black;">&nbsp;</span></span></p>
+<p style="margin: 0in; font-size: 12pt; font-family: 'Times New Roman', serif;"><span class="normaltextrun"><span style="font-family: Calibri, sans-serif; color: black;">ISC2 Learn </span></span><span class="eop"><span style="font-family: Calibri, sans-serif; color: black;">&nbsp;</span></span></p></body></html>

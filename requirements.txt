@@ -1,0 +1,14 @@
+bs4
+eml_parser
+requests
+vt
+pandas
+scikit-learn
+nltk
+numpy
+pandas
+altair
+wordcloud
+matplotlib
+seaborn
+tqdm

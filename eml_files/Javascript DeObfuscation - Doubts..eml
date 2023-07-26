@@ -1,0 +1,125 @@
+Delivered-To: gb0112358.vn@gmail.com
+Received: by 2002:a5d:4284:0:0:0:0:0 with SMTP id k4csp4206257wrq;
+        Mon, 26 Jun 2023 05:23:14 -0700 (PDT)
+X-Received: by 2002:a17:90b:3906:b0:263:945:61ae with SMTP id ob6-20020a17090b390600b00263094561aemr253669pjb.23.1687782194680;
+        Mon, 26 Jun 2023 05:23:14 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1687782194; cv=none;
+        d=google.com; s=arc-20160816;
+        b=EHm4mNU4V0I6TsbnFSOcpVMWg3dqz/THl9hwaLcWhb0P96bxiqwi+BkUZlRnDEuuAE
+         dRHQ+xRQnRdbfLtct9FmrsmunT9gApC25xG1JZ6b901ZPj8wmKM/7SwPBoHNSYNDt4Pm
+         boEyt3rh23aY8KnGmZvLWK2Kc7N9fvezShqoF3x9XlvyT2utg1fCtEC2QA7+ozeCtoHK
+         p+kMUNV1JOZE01wjxSESAxN8/JbiBgZAbVBp/hPE+u3Jg7fZqyyoTtuaM3vtYYJzEHox
+         Dp29bnTCfrsAUIPrMnq7T0vVphNYn7N8NPlx+PPBMYy1V2sEhHabKi466VE3w9XB/hT9
+         HDjw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=to:subject:message-id:date:from:mime-version:dkim-signature;
+        bh=DE3xPo4W2zAvWaIyvUCNOPPZpbWNUkkdjfkPAb4aFKQ=;
+        fh=i0DBLEENPfLu8q/aBWkGqyNpruePkSFPb05DXrt77p4=;
+        b=v2KI0Hb7iN4qcchzcyUMr2f/rsFNQ3ZS2vCrvNL2i/Syu/DPZv9elax5b7UtMO3eC/
+         uOI9i972nXt9qwSSd17rOIOBApP9oj0bLe+VU2q6AAYfdwq7ZCAnHnFnMOlzaacMsJ9T
+         TsWPSDai3QgsDvpr2JSdbgJnTrCXCJ9YTeY4qtxB5kvLOs3RDWG4KAomhoH9ypiBxqmR
+         THk0DyLOdjnOE8eJh7JgikxGGF9QWl/Ni2maiqt2ay5unNL3ACvDbLOMZVvPSXtnrBC/
+         A1lqh9oi0rI0gUfV4D6snY0MLb6WKFvcBUxl2y8q/hYklu2IyGwHm0npzXBI7PmlDNxK
+         EqSg==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@gmail.com header.s=20221208 header.b=GRvYinMz;
+       spf=pass (google.com: domain of cellphonerise@gmail.com designates 209.85.220.41 as permitted sender) smtp.mailfrom=cellphonerise@gmail.com;
+       dmarc=pass (p=NONE sp=QUARANTINE dis=NONE) header.from=gmail.com
+Return-Path: <cellphonerise@gmail.com>
+Received: from mail-sor-f41.google.com (mail-sor-f41.google.com. [209.85.220.41])
+        by mx.google.com with SMTPS id k10-20020a17090a62ca00b0025025165972sor1920507pjs.6.2023.06.26.05.23.14
+        for <gb0112358.vn@gmail.com>
+        (Google Transport Security);
+        Mon, 26 Jun 2023 05:23:14 -0700 (PDT)
+Received-SPF: pass (google.com: domain of cellphonerise@gmail.com designates 209.85.220.41 as permitted sender) client-ip=209.85.220.41;
+Authentication-Results: mx.google.com;
+       dkim=pass header.i=@gmail.com header.s=20221208 header.b=GRvYinMz;
+       spf=pass (google.com: domain of cellphonerise@gmail.com designates 209.85.220.41 as permitted sender) smtp.mailfrom=cellphonerise@gmail.com;
+       dmarc=pass (p=NONE sp=QUARANTINE dis=NONE) header.from=gmail.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1687782194; x=1690374194;
+        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=DE3xPo4W2zAvWaIyvUCNOPPZpbWNUkkdjfkPAb4aFKQ=;
+        b=GRvYinMzTwzCBfCPtLVFjojnQ1kI0ZbicWxlmRQvtSxY5VgjEwgjUeKDH4Ds1y5cXB
+         AmEdoGFRKd8S8165JS1ZlDYJMrVwBSeBEXEdLxLqwi91fOHyUbSRUaCVNuwBK2bObILA
+         oms+hXU2rgEBWnaJtoBkIjJ560fRKmJfSHb27jI0RJtUKibBPlhpQchavF9/EUITCU9h
+         hsiLZMh7Fb3g39jNNdf1ar/XDyyUtB1fc2nO6oiRrP+FZoJX2U/Mc0mkU50NY4YUfj96
+         NkPQITK0b4sNZ9B+lwICkwJSNlfwXzpyI86lGJ413BlhFOCXmRnv2ukNBUaU7RLl0P67
+         vi4Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1687782194; x=1690374194;
+        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=DE3xPo4W2zAvWaIyvUCNOPPZpbWNUkkdjfkPAb4aFKQ=;
+        b=FGW3FHcZ9VPHwnjI6h2fyrHs/KeRj8B32IzgH1QOa0tRQKNcRKEBC7Zcz87VA0L+FA
+         u4fgsTi/st/+h4vNz+VcRRujjKd0oNONRQyqMFMUm78dPSFAOY7Qi4yrGlyTXlu/rf+N
+         7bMCJqEQVvqbUSSFJ6LJ1QwrJf3NvwH2LRDUxKNjEnfTwKresDP0Yn7dWG+kRiL6e9rN
+         XHlUZ6WlErSQKfuOU6yDBPr6n0tqJMgxISf/nNkCXO4kq37+Kp5MhPRTeyoCvtJQXw2M
+         qHBl6PPMzkX05eWjcpo/C/Cih+K1ZPcuWiR78rbfyLD1y9RFrDZUeLht6LULMDHjFGdZ
+         IU1g==
+X-Gm-Message-State: AC+VfDygMehOoVRVtFWeDr3mAa+31/EL6xgKy3jMq76gvR2Cbzy6G4yD
+	P/c0Tga5Rbmrrmhfeu83CB31/Sb3bCGMI8b6XZpsam3TyIA/t5Gw
+X-Google-Smtp-Source: ACHHUZ78puX48MOoUTS9TrWiy8LnTAr2VsPmhHRLQkhVAFO4Pl44OV9IC98SWINACyMl0wPmVneevsyDVBvoQxbOttY=
+X-Received: by 2002:a17:90a:3049:b0:262:fc8a:ecf with SMTP id
+ q9-20020a17090a304900b00262fc8a0ecfmr1244305pjl.27.1687782193668; Mon, 26 Jun
+ 2023 05:23:13 -0700 (PDT)
+MIME-Version: 1.0
+From: Phone Plaza <cellphonerise@gmail.com>
+Date: Mon, 26 Jun 2023 17:52:59 +0530
+Message-ID: <CAG3vsMJiyJq5iBbKNdk=W7qQi1JhW6k1MP-WogAc2DfqD7sPvg@mail.gmail.com>
+Subject: Javascript DeObfuscation - Doubts.
+To: "gb0112358.vn@gmail.com" <gb0112358.vn@gmail.com>
+Content-Type: multipart/alternative; boundary="0000000000001ca7b305ff076ab6"
+
+--0000000000001ca7b305ff076ab6
+Content-Type: text/plain; charset="UTF-8"
+
+Greetings,
+
+Really liked your video brother and I will support you from my side always
+..
+
+Below file is surely javascript bro cause i have tried different node.js
+libraries which executes js but it cannot deobfuscate no matter how many
+different modules i use.
+
+But surely your skill level is different than me so i need your help in
+this bro..
+
+https://www.mediafire.com/file/mezr2i7rd...e.txt/file
+<https://www.mediafire.com/file/mezr2i7rdty09t4/core.txt/file>
+
+File Scanned:
+https://www.virustotal.com/gui/file/b608...?nocache=1
+<https://www.virustotal.com/gui/file/b6088bca8b374051ce258d876f3ccb333de4a9bae68774fb7e656c756bd0bfb1?nocache=1>
+
+Will wait for good news from you
+
+Thanks bro :) Regards
+
+--0000000000001ca7b305ff076ab6
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr"><div>Greetings, <br></div><div><br></div><div>Really liked=
+ your video brother and I will support you from my side always .. <br></div=
+><div><br></div><div>Below file is surely javascript bro cause i have tried=
+ different node.js libraries which executes js but it cannot deobfuscate no=
+ matter how many different modules i use.</div><div><br></div><div>But sure=
+ly your skill level is different than me so i need your help in this bro..<=
+/div><div><br></div><div>
+<a href=3D"https://www.mediafire.com/file/mezr2i7rdty09t4/core.txt/file" ta=
+rget=3D"_blank" rel=3D"ugc" class=3D"gmail-mycode_url">https://www.mediafir=
+e.com/file/mezr2i7rd...e.txt/file</a><br>
+<br>
+File Scanned:<br>
+<a href=3D"https://www.virustotal.com/gui/file/b6088bca8b374051ce258d876f3c=
+cb333de4a9bae68774fb7e656c756bd0bfb1?nocache=3D1" target=3D"_blank" rel=3D"=
+ugc" class=3D"gmail-mycode_url">https://www.virustotal.com/gui/file/b608...=
+?nocache=3D1</a></div><div><br></div><div>Will wait for good news from you<=
+/div><div><br></div><div>Thanks bro :) Regards<br>
+
+</div></div>
+
+--0000000000001ca7b305ff076ab6--

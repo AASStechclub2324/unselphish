@@ -1,0 +1,15 @@
+kmin clustering model fro init analysis
+linear regression model will filter out nlp based and source based messages
+
+eml file scan checklist
+
+*parse file - DONE
+*check links against virustotal - DONE
+*blacklist search email text - DONE
+*Get(link_url) == or != link_url (check for redirection, if true, then sus)
+*clear ip link e.g. https://50.10.125.26/index.php - DONE
+*webpage age > 1 year : not suspicious; else : suspicious
+*domain name belongs to credible domain names then not suspicious
+*attached .exe (application/json) file : suspicious
+*ai/ml model check
+*generate final report
