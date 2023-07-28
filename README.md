@@ -3,9 +3,9 @@ This is a software solution being developed for the eRAKSHA 2023 competition. It
 
 ## Installation
 
-Clone the repository:  *git clone https://github.com/agnij-dutta/Unselphish.git* 
+Clone the repository:  *git clone https://github.com/AASStechclub2324/unselphish.git* 
 
-Install the dependencies:  *cd Unselphish pip install -r requirements.txt*
+Install the dependencies:  *cd unselphish pip install -r requirements.txt*
 
 Run the app: *python main.py*
 
