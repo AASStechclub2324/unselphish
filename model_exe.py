@@ -62,6 +62,8 @@ def execute_spam_models(text):
     high_msg = text[all_percent.index(highest)]
     return mean_percent, highest, high_msg
 
+def main_model(input_var):
+    return execute_spear_models(input_var), execute_spam_models(input_var)
 
 
 
