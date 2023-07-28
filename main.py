@@ -8,6 +8,7 @@ from bs4 import BeautifulSoup
 import sys
 import spear_exe
 import model_exe
+import whatsapp_check
 
 try:
     scantype = int(input('''1. Scan link (virustotal)\n2. Threat report from downloaded email (.eml)\n3. Scan singular message\n4. Threat report from exported whatsapp chat \n5. Scan file (virustotal)\n\nOption: '''))
@@ -111,7 +112,27 @@ if scantype == 2:
 if scantype == 3:
     pass
 if scantype == 4:
-    pass
+    ## whatsapp threat report from txt file
+
+    #### INITIAL FILTERING OF WHATSAPP MESSAGES #########################
+    chattxt = str(input("Filepath of whatsapp chat file(.txt): "))
+    parsedchat_messages, parsedchat_authors = whatsapp_check.parse_chat_file(chattxt)
+    sus_messages = []
+    chatblacklistedwordsfoundall = []
+    linksinchat_all = []
+    for message in parsedchat_messages:
+        chatblacklistedwords, chatblacklistedcount = blacklist.check_blacklisted_keywords(message['content'])
+        if chatblacklistedcount > 0:
+            sus_messages.append(message)
+            chatblacklistedwordsfoundall += chatblacklistedwords
+        links_in_chatmessage = re.findall('http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\), ]|(?:%[0-9a-fA-F][0-9a-fA-F]))+',message['content'])
+        linksinchat_all += links_in_chatmessage
+    #### INITIAL FILTERING END #########################
+
+    
+
+
+
 if scantype == 5:
     fpath = str(input("Filepath of file to scan: "))
     vtl.active_scan_file(fpath)
