@@ -9,7 +9,8 @@ Install the dependencies:  *cd unselphish pip install -r requirements.txt*
 
 Run the app: *python main.py*
 
-Usage: 1. Scan link (virustotal)
+## Usage 
+1. Scan link (virustotal)
 2. Threat report from downloaded email (.eml)
 3. Scan singular message
 4. Threat report from exported whatsapp chat
