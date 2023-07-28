@@ -1,18 +1,5 @@
 import pickle
 
-emails = ['your microsoft account has been compromised ,you must update before or else your account going to close click to update', 'Today we want to inform you that the application period for 15.000 free Udacity Scholarships in Data Science is now open! Please apply by November 16th, 2020 via https://www.udacity.com/bertelsmann-tech-scholarships.']
-input_var = ["Guess what? You have been shortlisted to win a free HP Laptop. It is a one-time oppurtunity. Don't miss this!! Txt on 9876543234 to claim your reward", "Alert!! Win a free Apple watch today. Call at 0987657654 to claim your reward. Hurry! Don't Miss this one-time opportunity!!"]
-test = ['''Subject: You have (3) failed email deliveries
-Sender address: noreply@domain.com
-Sender ip:
-Reply_to:
-
-======================================================
-
-you have (3) failed email deliveries verify your information to deliver your e-mails  brad@malware-traffic-analysis.net  retrieve your mails    please kindly retrieve your email
-
-======================================================''']
-
 def execute(emails):
 
     '''emails = [str]
@@ -22,7 +9,7 @@ def execute(emails):
     spam_count = ham_count = 0
 
     for i in range(1,7):
-        model = pickle.load(open(fr'C:\Users\Anutosh\Desktop\Spam_recognition\spear phishing detector\model_{i}.sav', 'rb'))
+        model = pickle.load(open(fr'AASStechclub2324/unselphish/ai_ml/model_{i}.sav', 'rb'))
         prediction = model.predict(emails)
         pred_percent = model.predict_proba(emails)
 
@@ -55,9 +42,3 @@ def execute(emails):
         pass
 
     print(res, f'- Probability: {round(av_percent)}%')
-
-
-input_var = test
-
-execute(input_var)
-

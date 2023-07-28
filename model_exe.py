@@ -1,40 +1,85 @@
 import pickle
-def execute(emails):
-    model = pickle.load(open(r'.\ai_ml\trained_model.sav', 'rb'))
-    '''emails = [str]
-    It is reccomended to only pass 1 email per execution for readabitly and easier debugging experience'''
 
-    prediction = model.predict(emails)
-    pred_percent = model.predict_proba(emails)
+def execute_spear_models(text):
+    all_percent = []
+    for index in range(len(text)):
+        msg = text[index]
+        msg = [msg]
+        total_percent = 0
+        spam_count = 0
+        ham_count = 0
+        
+        for i in range(1,7):
+            model = pickle.load(open(fr'unselphish/ai_ml/model_{i}.sav', 'rb'))
+            
+            prediction = model.predict(msg)
+            pred_percent = model.predict_proba(msg)
+            
+            print(f"Model {i} running....")
+            percent = pred_percent[0][0]*100
 
-    res = "Cannot be determined"
-    percent = "Cannot be determined"
+            #total percent of all the models predicting one message
+            total_percent += percent
 
-    for ind in range(len(list(prediction))):
-        p = list(prediction)[ind]
+            if prediction == 0:
+                res = "It is a spam"
+                spam_count += 1
+                continue
 
-        if p == 'spam':
+            elif prediction == 1:
+                res = "It is not a spam"
+                ham_count += 1
+                continue
+        avg_percent = total_percent/6
+        all_percent.append(avg_percent)
+        if spam_count > ham_count:
             res = "It is a spam"
-            percent = pred_percent[ind][1] * 100
-            print(res, f'Probability: {round(percent)}%')
-            continue
-
-        elif p == 'ham':
+        elif ham_count > spam_count:
             res = "It is not a spam"
-            percent = pred_percent[ind][0] * 100
-            print(res, f'Probability: {round(percent)}%')
-            continue
+        else:
+            pass
+    #mean percent of all messages
+    mean_percent = sum(all_percent)/len(all_percent)
+    highest = max(all_percent)
+    high_msg = text[all_percent.index(highest)]
 
-    return round(percent)
+    return mean_percent, highest, high_msg
 
-# email = ['''Subject: You have (3) failed email deliveries
-# Sender address: noreply@domain.com
-# Sender ip:
-# Reply_to:
+def execute_spam_models(text):
+    all_percent = []
+    for ind in range(len(text)):
+        msg = text[ind]
+        msg = [msg]
+        model = pickle.load(open(fr'/unselphish/ai_ml/init_spam_model.sav', 'rb'))
+        prediction = model.predict(msg)
+        pred_percent = model.predict_proba(msg)
+        percent = pred_percent[0][0]*100
+        all_percent.append(percent)
 
-# ======================================================
+    mean_percent =  sum(all_percent)/len(all_percent)
+    print(all_percent)
+    highest = max(all_percent)
+    high_msg = text[all_percent.index(highest)]
+    return mean_percent, highest, high_msg
 
-# you have (3) failed email deliveries verify your information to deliver your e-mails  brad@malware-traffic-analysis.net  retrieve your mails    please kindly retrieve your email
 
-# ======================================================''']
-# execute(email, model)
+
+
+if __name__ == '__main__':
+    emails = ['your microsoft account has been compromised ,you must update before or else your account going to close click to update', 'Today we want to inform you that the application period for 15.000 free Udacity Scholarships in Data Science is now open! Please apply by November 16th, 2020 via https://www.udacity.com/bertelsmann-tech-scholarships.']
+    input_var = ["Guess what? You have been shortlisted to win a free HP Laptop. It is a one-time oppurtunity. Don't miss this!! Txt on 9876543234 to claim your reward", "Alert!! Win a free Apple watch today. Call at 0987657654 to claim your reward. Hurry! Don't Miss this one-time opportunity!!"]
+    test = ['''Subject: You have (3) failed email deliveries
+    Sender address: noreply@domain.com
+    Sender ip:
+    Reply_to:
+
+    ======================================================
+
+    you have (3) failed email deliveries verify your information to deliver your e-mails  brad@malware-traffic-analysis.net  retrieve your mails    please kindly retrieve your email
+
+    ======================================================''']
+    input_var = emails
+    print(execute_spear_models(input_var))
+    print(execute_spam_models(input_var))
+
+    
