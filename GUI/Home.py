@@ -1,6 +1,13 @@
 import flask
+import os
 
 app=flask.Flask(__name__)
+fPath=os.path.abspath(os.path.join(os.getcwd(), os.pardir))
+readme=open(fPath+'\\README.md', 'r')
+
+intro = readme.read(351)
+usage=readme.read(213)
+intro = intro + readme.read(176)
 
 @app.route('/')
 def home():
@@ -8,7 +15,9 @@ def home():
 
 @app.route('/about')
 def about():
-    return flask.render_template('about.html')
+    global intro
+    about=intro
+    return flask.render_template('about.html', about=about)
 
 @app.route('/credits')
 def credits():
@@ -18,9 +27,11 @@ def credits():
 def license():
     return flask.render_template('license.html')
 
+'''
 @app.route('/install_cli')
 def install_cli():
     return flask.render_template('install_cli.html')
+'''
 
 @app.route('/scan_link', methods=['POST'])
 def scan_link():
@@ -77,4 +88,4 @@ def scan_file():
     return flask.render_template('home.html', output=output)
 
 if __name__ == '__main__':
-   app.run()
+   app.run(host='0.0.0.0', port='5001')
