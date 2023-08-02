@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Unselphish</title>
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css2?family=Comfortaa&display=swap">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="header">
+        <h1>Unselphish</h1>
+        <div class="menu-content">
+            <a href="#">Home</a>
+            <a href="#">About</a>
+            <a href="#">Credits</a>
+            <a href="#">License</a>
+        </div>
+    </div>
+    <div class="gap">
+    </div>
+    <div class="main">
+        <!--form>
+            <label for="text_input_1">Text Input 1:</label>
+            <input type="text" id="text_input_1" name="text_input_1">
+            <label for="text_input_2">Text Input 2:</label>
+            <input type="text" id="text_input_2" name="text_input_2">
+            <label for="text_input_3">Text Input 3:</label>
+            <input type="text" id="text_input_3" name="text_input_3">
+
+            <label for="file_input_1">File Input 1:</label>
+            <input type="file" id="file_input_1" name="file_input_1">
+            <label for="file_input_2">File Input 2:</label>
+            <input type="file" id="file_input_2" name="file_input_2">
+            <label for="file_input_3">File Input 3:</label>
+            <input type="file" id="file_input_3" name="file_input_3">
+
+            <input type="submit" value="Submit">
+        </form-->
+        <h2>Scan Link</h2>
+        <form action="/scan_link" method="post">
+            <input class="fileinput" type="text" name="scan_link">
+            <input class="submitbutton" type="submit" value="Scan">
+        </form>
+
+        <h2>Scan Domain</h2>
+        <form action="/scan_domain" method="post">
+            <input class="fileinput" type="text" name="scan_domain">
+            <input type="submit" value="Scan" class="submitbutton">
+        </form>
+
+        <h2>Scan Singular Message</h2>
+        <form action="/scan_singular_message" method="post">
+            <input class="fileinput" type="text" name="scan_message">
+            <input type="submit" value="Scan" class="submitbutton">
+        </form>
+
+        <h2>Threat Report From WhatsApp Chat</h2>
+        <form action="/whatsapp_report" method="post" enctype="multipart/form-data">
+            <input class="fileinput" type="file" name="whatsapp_report">
+            <input class="submitbutton" type="submit" value="Upload">
+        </form>
+
+        <h2>Threat Report from Email (.eml)</h2>
+        <form action="/email_report" method="post" enctype="multipart/form-data">
+            <input class="fileinput" type="file" name="email_report">
+            <input class="submitbutton" type="submit" value="Upload">
+        </form>
+
+        <h2>Scan File</h2>
+        <form action="/scan_file" method="post" enctype="multipart/form-data">
+            <input class="fileinput" type="file" name="scan_file">
+            <input class="submitbutton" type="submit" value="Upload">
+        </form>
+    </div>
+
+</body>
+</html>
