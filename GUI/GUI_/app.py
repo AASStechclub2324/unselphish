@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, jsonify
 
 #variables
-submitToDatabase=True
+submitToDatabase=False
 
 app = Flask(__name__)
 
@@ -23,24 +23,32 @@ def license():
 
 @app.route('/scan_link', methods=['POST'])
 def scan_link():
+    global submitToDatabase
+    submitToDatabase = False
     link = request.form.get('scan_link')
     output=link
     return render_template('report.html', output=output)
 
 @app.route('/scan_domain', methods=['POST'])
 def scan_domain():
+    global submitToDatabase
+    submitToDatabase = False
     domain = request.form.get('scan_domain')
     output=domain    
     return render_template('report.html', output=output)
 
 @app.route('/scan_message', methods=['POST'])
 def scMsg():
+    global submitToDatabase
+    submitToDatabase = False
     msg = request.form.get('scan_message')
     output=msg    
     return render_template('report.html', output=output)
 
 @app.route('/whatsapp_report', methods=['POST'])
 def whatsapp_report():
+    global submitToDatabase
+    submitToDatabase = False
     output=''
     if 'whatsapp_report' in request.files:
         whatsapp_file = request.files['whatsapp_report']
@@ -51,6 +59,8 @@ def whatsapp_report():
 
 @app.route('/email_report', methods=['POST'])
 def email_report():
+    global submitToDatabase
+    submitToDatabase = False
     output=''
     if 'email_report' in request.files:
         eml_file = request.files['email_report']
@@ -61,6 +71,8 @@ def email_report():
 
 @app.route('/scan_file', methods=['POST'])
 def scan_file():
+    global submitToDatabase
+    submitToDatabase = False
     output=''
     if 'scan_file' in request.files:
         file = request.files['scan_file']
@@ -73,14 +85,12 @@ def scan_file():
 def submitYes():
     global submitToDatabase
     submitToDatabase = True
-    print(submitToDatabase)
     return render_template('index.html')
 
 @app.route('/dontSubmitToDatabase', methods=['POST'])
 def submitNo():
     global submitToDatabase
     submitToDatabase = False
-    print(submitToDatabase)
     return render_template('index.html')
 
 '''
