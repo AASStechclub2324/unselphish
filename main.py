@@ -1,5 +1,6 @@
 import emlfilescan as emlscan
 import virustotallink as vtl
+import virustotal as vt2
 import blacklist_keyword_check as blacklist
 from printv import printv
 import re
@@ -8,18 +9,20 @@ from bs4 import BeautifulSoup
 import sys
 import spear_exe
 import model_exe
-import whatsapp_check
+import whatsapp_analysis
+import db
 
 try:
     scantype = int(input('''1. Scan link (virustotal)\n2. Threat report from downloaded email (.eml)\n3. Scan singular message\n4. Threat report from exported whatsapp chat \n5. Scan file (virustotal)\n\nOption: '''))
 except:
     sys.exit(1)
 
-def complete_scan_text(text="", linklist=[]):
+def complete_scan_text(text_list=[], linklist=[]):
 
     #vtscan links
     #blacklist word scan
     #aiml model scan of text pattern for spear phishing
+    text = ''.join(text_list)
     
     blacklistedwords, blacklistedwordscnt = blacklist.check_blacklisted_keywords(text)
     if len(linklist) == 0:
@@ -31,7 +34,7 @@ def complete_scan_text(text="", linklist=[]):
     linksscannedcount = 0
     for link in linklist:
         try:
-            sus_percent, malcount, suscount = vtl.scanlink(link)
+            sus_percent, malcount, suscount = vt2.active_scanlink(link)
             linksscannedcount += 1
             if malcount > 0:
                 mallinks.append(f"\nLink Reported malicious: {malcount} times\n" + link)
@@ -56,9 +59,19 @@ def complete_scan_text(text="", linklist=[]):
     # url1 = "http://www.webconfs.com/domain-age.php"
     # for url in links_in_email:
 
-    ml_phish_attempt_percent = model_exe.execute([text])
+    spear_output, svm_output = model_exe.main_model(text_list)
+    mean_spear, high_spear, mesg_spear = spear_output
+    mean_svm, high_svm, mesg_svm = svm_output
+    error = (abs(mean_spear-mean_svm)/mean_svm) * 100
+    #threat index calculation
+    printv(f"AI prediction percentage of phishing attempt: {mean_spear}%")
+    index = 10 - int((mean_spear/100)*9)
+    # if error <= 10:
+    #     index = 10 - int((mean_spear/100)*9)
+    #     printv(f"AI prediction percentage of phishing attempt: {mean_spear}%")
+    # else:
+    #     printv(f"\nModel couldn't analyze text.\n", color='red')
 
-    printv(f"AI prediction percentage of phishing attempt: {ml_phish_attempt_percent}%")
         
 
     ## ALERT PRINTING ######################################################
@@ -80,7 +93,11 @@ def complete_scan_text(text="", linklist=[]):
             printv(ip, color="RED")
     
     ## ALERT PRINTING END ######################################################
-    return
+
+
+    ## Generating Threat Report ################################################
+
+    return index
 
 if scantype == 1:
     url2scan = str(input("Url: "))
@@ -107,28 +124,98 @@ if scantype == 1:
 if scantype == 2:
     emlfile = str(input(".eml file: "))
     email_subject, received_from_addr, received_from_ip, reply_to, emailtext, links_in_email = emlscan.parse_eml(emlfile)
-    complete_scan_text(email_subject + " " + emailtext, linklist=links_in_email)
+    index = complete_scan_text([email_subject + " " + emailtext], linklist=links_in_email)
+    sus_details = []
+    if index < 6:
+        filepath = r"C:\Users\Anutosh\Desktop\detail.txt"  # Change the file path to your needs
+        detail = {"Email Reports": {"Sender's Address": received_from_addr, "Sender's IP": received_from_ip, "threat index": index}}
+        sus_details.append(detail)
+
+
+    with open(filepath, 'w') as file:
+        file.write(str(sus_details))
+    db.update_storage(filepath)
+
     
 if scantype == 3:
-    pass
+    ## Single Message Scan
+    msg2scan = str(input("Text message to scan: "))
+
+    ## Extracting links before replacing them
+    links_in_chatmessage = re.findall('http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\), ]|(?:%[0-9a-fA-F][0-9a-fA-F]))+',msg2scan)
+
+    #################################### DATA CLEANING ######################################
+
+    #CONVRTING EVERYTHING TO LOWERCASE
+    msg2scan=msg2scan.lower()
+
+    #REPLACING NEXT LINES BY 'WHITE SPACE'
+    msg2scan=msg2scan.replace(r'\n'," ") 
+
+    # REPLACING EMAIL IDs BY 'MAILID'
+    msg2scan=msg2scan.replace(r'^.+@[^\.].*\.[a-z]{2,}$','MailID')
+
+    # REPLACING URLs  BY 'Links'
+    msg2scan=msg2scan.replace(r'^http\://[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(/\S*)?$','Links')
+
+    # REPLACING CURRENCY SIGNS BY 'MONEY'
+    msg2scan=msg2scan.replace(r'£|\$', 'Money')
+
+    # REPLACING LARGE WHITE SPACE BY SINGLE WHITE SPACE
+    msg2scan=msg2scan.replace(r'\s+', ' ')
+
+    # REPLACING LEADING AND TRAILING WHITE SPACE BY SINGLE WHITE SPACE
+    msg2scan=msg2scan.replace(r'^\s+|\s+?$', '')
+
+    #REPLACING CONTACT NUMBERS
+    msg2scan=msg2scan.replace(r'^\(?[\d]{3}\)?[\s-]?[\d]{3}[\s-]?[\d]{4}$','contact number')
+
+    #REPLACING SPECIAL CHARACTERS  BY WHITE SPACE 
+    msg2scan=msg2scan.replace(r"[^a-zA-Z0-9]+", " ")
+
+    #################################### DATA CLEANING END ######################################
+
+    index = complete_scan_text([msg2scan])
+
 if scantype == 4:
     ## whatsapp threat report from txt file
 
-    #### INITIAL FILTERING OF WHATSAPP MESSAGES #########################
+    ################ INITIAL FILTERING OF WHATSAPP MESSAGES #########################
     chattxt = str(input("Filepath of whatsapp chat file(.txt): "))
-    parsedchat_messages, parsedchat_authors = whatsapp_check.parse_chat_file(chattxt)
+    parsedchat_authors, parsedchat_messages = whatsapp_analysis.parse_chat_file(chattxt)
     sus_messages = []
     chatblacklistedwordsfoundall = []
     linksinchat_all = []
     for message in parsedchat_messages:
-        chatblacklistedwords, chatblacklistedcount = blacklist.check_blacklisted_keywords(message['content'])
+        chatblacklistedwords, chatblacklistedcount = blacklist.check_blacklisted_keywords(message)
         if chatblacklistedcount > 0:
             sus_messages.append(message)
             chatblacklistedwordsfoundall += chatblacklistedwords
-        links_in_chatmessage = re.findall('http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\), ]|(?:%[0-9a-fA-F][0-9a-fA-F]))+',message['content'])
+        links_in_chatmessage = re.findall('http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\), ]|(?:%[0-9a-fA-F][0-9a-fA-F]))+',message)
         linksinchat_all += links_in_chatmessage
     #### INITIAL FILTERING END #########################
+    print(sus_messages)
+    ## Database Update ##
+    details = []
+    auth = input("\nEnter message author to be scanned: ")
+    msg2scan = []
+    for author in parsedchat_authors:
+        if author == auth:
+            ind = list(parsedchat_messages).index(auth)
+            spam_msg = sus_messages[ind]
+            msg2scan.append(spam_msg)
 
+    index = complete_scan_text(spam_msg, linksinchat_all)
+    if index < 6:
+        filepath = r"C:\Users\Anutosh\Desktop\detail.txt"  # Change the file path to your needs
+        detail = {"Whatsapp Reports": {'author': str(auth), 'threat index': index}}
+        details.append(detail)
+
+
+    with open(filepath, 'a') as file:
+        file.write(str(details))
+    db.update_storage(filepath)
+    ## Database Update End ##
     
 
 
