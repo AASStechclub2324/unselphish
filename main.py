@@ -7,7 +7,6 @@ import re
 import requests
 from bs4 import BeautifulSoup
 import sys
-import spear_exe
 import model_exe
 import whatsapp_analysis
 import db
@@ -134,7 +133,7 @@ if scantype == 2:
 
     with open(filepath, 'w') as file:
         file.write(str(sus_details))
-    db.update_storage(filepath)
+    # db.update_storage(filepath)
 
     
 if scantype == 3:
@@ -189,7 +188,9 @@ if scantype == 4:
     for message in parsedchat_messages:
         chatblacklistedwords, chatblacklistedcount = blacklist.check_blacklisted_keywords(message)
         if chatblacklistedcount > 0:
-            sus_messages.append(message)
+            author = parsedchat_authors[list(parsedchat_messages).index(message)]
+            msg_detail = {"author": author, "msg": message}
+            sus_messages.append(msg_detail)
             chatblacklistedwordsfoundall += chatblacklistedwords
         links_in_chatmessage = re.findall('http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\), ]|(?:%[0-9a-fA-F][0-9a-fA-F]))+',message)
         linksinchat_all += links_in_chatmessage
@@ -199,13 +200,14 @@ if scantype == 4:
     details = []
     auth = input("\nEnter message author to be scanned: ")
     msg2scan = []
-    for author in parsedchat_authors:
-        if author == auth:
-            ind = list(parsedchat_messages).index(auth)
-            spam_msg = sus_messages[ind]
+    print(parsedchat_authors)
+    for sus in sus_messages:
+        if sus["author"] == auth:
+            spam_msg = sus["msg"]
             msg2scan.append(spam_msg)
+    print(msg2scan)
 
-    index = complete_scan_text(spam_msg, linksinchat_all)
+    index = complete_scan_text(msg2scan, linksinchat_all)
     if index < 6:
         filepath = r"C:\Users\Anutosh\Desktop\detail.txt"  # Change the file path to your needs
         detail = {"Whatsapp Reports": {'author': str(auth), 'threat index': index}}
@@ -214,7 +216,7 @@ if scantype == 4:
 
     with open(filepath, 'a') as file:
         file.write(str(details))
-    db.update_storage(filepath)
+    # db.update_storage(filepath)
     ## Database Update End ##
     
 
@@ -222,4 +224,4 @@ if scantype == 4:
 
 if scantype == 5:
     fpath = str(input("Filepath of file to scan: "))
-    vtl.active_scan_file(fpath)
+    vt2.active_scan_file(fpath)
