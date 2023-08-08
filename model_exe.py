@@ -1,4 +1,6 @@
 import pickle
+import sklearn as sk
+from sklearn.feature_extraction.text import TfidfVectorizer
 
 def execute_spear_models(text):
     all_percent = []
@@ -10,7 +12,7 @@ def execute_spear_models(text):
         ham_count = 0
         
         for i in range(1,7):
-            model = pickle.load(open(fr'unselphish/ai_ml/model_{i}.sav', 'rb'))
+            model = pickle.load(open(fr'ai_ml/model_{i}.sav', 'rb'))
             
             prediction = model.predict(msg)
             pred_percent = model.predict_proba(msg)
@@ -42,6 +44,7 @@ def execute_spear_models(text):
     mean_percent = sum(all_percent)/len(all_percent)
     highest = max(all_percent)
     high_msg = text[all_percent.index(highest)]
+    print(all_percent)
 
     return mean_percent, highest, high_msg
 
@@ -50,10 +53,10 @@ def execute_spam_models(text):
     for ind in range(len(text)):
         msg = text[ind]
         msg = [msg]
-        model = pickle.load(open(fr'/unselphish/ai_ml/init_spam_model.sav', 'rb'))
+        model = pickle.load(open(fr'ai_ml/Spam_Model_LoR.sav', 'rb'))
         prediction = model.predict(msg)
         pred_percent = model.predict_proba(msg)
-        percent = pred_percent[0][0]*100
+        percent = pred_percent[0][1]*100
         all_percent.append(percent)
 
     mean_percent =  sum(all_percent)/len(all_percent)
@@ -61,6 +64,26 @@ def execute_spam_models(text):
     highest = max(all_percent)
     high_msg = text[all_percent.index(highest)]
     return mean_percent, highest, high_msg
+
+def execute_SVM(text):
+    vectorizer = TfidfVectorizer(stop_words='english', max_features=5000)
+    all_percent = []
+    for ind in range(len(text)):
+        msg = text[ind]
+        msg = [msg]
+        msg_tfidf = vectorizer.transform(msg)
+        model = pickle.load(open(fr'ai_ml/Spam_Model_SVM.sav', 'rb'))
+        prediction = model.predict(msg_tfidf)
+        pred_percent = model.predict_proba(msg)
+        percent = pred_percent[0][1]*100
+        all_percent.append(percent)
+
+    mean_percent =  sum(all_percent)/len(all_percent)
+    print(all_percent)
+    highest = max(all_percent)
+    high_msg = text[all_percent.index(highest)]
+    return mean_percent, highest, high_msg
+
 
 def main_model(input_var):
     return execute_spear_models(input_var), execute_spam_models(input_var)
@@ -81,7 +104,8 @@ if __name__ == '__main__':
 
     ======================================================''']
     input_var = emails
-    print(execute_spear_models(input_var))
-    print(execute_spam_models(input_var))
+    print(main_model(input_var))
+
+
 
     
