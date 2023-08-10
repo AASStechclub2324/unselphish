@@ -1,11 +1,8 @@
 import emlfilescan as emlscan
-import virustotallink as vtl
-import virustotal as vt2
+import virustotal as vt
 import blacklist_keyword_check as blacklist
 from printv import printv
 import re
-import requests
-from bs4 import BeautifulSoup
 import sys
 import model_exe
 import whatsapp_analysis
@@ -13,40 +10,67 @@ import db
 
 def scan_link():
     url2scan = str(input("Url: "))
-    url2scan = url2scan.split("?")[0]
-    url2scan = url2scan.split(" =")[0]
-    url2scan = url2scan.split("#")[0]
-    try:
-        sus_percent, malcount, suscount = vtl.scanlink(url2scan, verbosescan=True)
-        if sus_percent or malcount or suscount:
-            activescanbool = str(input("Active scan url (verbose)? (yes/no) default-yes: "))
-            if activescanbool.lower().strip() == "yes" or activescanbool.strip() == "":
-                verbosescanbool = str(input("Verbose (y/n) default n: "))
-                if "y" in verbosescanbool:
-                    vtl.active_scanlink(url2scan, verbosescan=True)
-                else:
-                    print("\nSCANNING URL. THIS MIGHT TAKE A MINUTE.")
-                    vtl.active_scanlink(url2scan, verbosescan=False)
-            else:
-                sys.exit(1)
-    except Exception as e:
-        printv(e)
+    print("\nSCANNING URL. THIS MIGHT TAKE A MINUTE.")
+    total_votes, analysis_stats = vt.active_scanlink(url=url2scan)
+    if [total_votes, analysis_stats] == ['err', 'err']:
+        link_report = f"Failed to send URL: {url2scan} for analysis and get the report"
+    else:
+        stat = eval(analysis_stats)
+        mal_link_report = ""
+        mal_found = False
+        sus_found = False
+        undetected = False
+        harmless = False
+        if int(stat['undetected']) > int(stat['harmless']) + int(stat['malicious']) + int(stat['suspicious']):
+            undetected = True
+            mal_link_report += f"\nUrl: {url2scan}  was undetected {stat['undetected']} times by various scanners!"
+            printv("\n[+]"+mal_link_report)
+            printv("Should be ALERT!", color='RED')
+        if int(stat['malicious'])>0:
+            mal_link_report += f"\nUrl: {url2scan}  was found malicous {stat['malicious']} times by various scanners!"
+            printv("\n[+]"+mal_link_report, color='RED')
+            mal_found = True
+        if int(stat['suspicious']) > 0:
+            mal_link_report += f"\nUrl: {url2scan}  was found suspicious {stat['suspicious']} times by various scanners!"
+            printv("\n[+]"+mal_link_report, color='RED')
+            sus_found = True
+        if int(stat['harmless']) > int(stat['undetected']) + int(stat['malicious']) + int(stat['suspicious']):
+            mal_link_report += f"\nUrl: {url2scan}  was found harmless {stat['harmless']} times by various scanners!"
+            printv("\n[+]"+mal_link_report, color="GREEN")
+            harmless = True
+        
+
+        if not mal_found and not undetected and not sus_found:
+            mal_link_report += f"\nUrl: {url2scan}  was not found explicitly malicous!"
+            printv(mal_link_report)
+
+        link_report = f"""
+        Initial Scan Report(Votes): {total_votes}
+
+        Deep Scan Report: {analysis_stats}
+
+        {mal_link_report}"""
+    
+    print(f"Initial Scan Report(Votes): {total_votes}\nDeep Scan Report: {analysis_stats}")
+        
+    return link_report
 
 
 def eml_scan():
     emlfile = str(input(".eml file: "))
     email_subject, received_from_addr, received_from_ip, reply_to, emailtext, links_in_email = emlscan.parse_eml(emlfile)
-    index = complete_scan_text([email_subject + " " + emailtext], linklist=links_in_email)
+    index, report = complete_scan_text([email_subject + " " + emailtext], linklist=links_in_email)
     sus_details = []
-    if index < 6:
-        filepath = r"C:\Users\Anutosh\Desktop\detail.txt"  # Change the file path to your needs
-        detail = {"Email Reports": {"Sender's Address": received_from_addr, "Sender's IP": received_from_ip, "threat index": index}}
-        sus_details.append(detail)
+    # if index < 6:
+    #     filepath = r"C:\Users\Anutosh\Desktop\detail.txt"  # Change the file path to your needs
+    #     detail = {"Email Reports": {"Sender's Address": received_from_addr, "Sender's IP": received_from_ip, "threat index": index}}
+    #     sus_details.append(detail)
 
 
-    with open(filepath, 'w') as file:
-        file.write(str(sus_details))
-    db.update_storage(filepath)
+    # with open(filepath, 'w') as file:
+    #     file.write(str(sus_details))
+    # db.update_storage(filepath)
+    return index, report
 
 
 def single_scan():
@@ -77,7 +101,7 @@ def single_scan():
     msg2scan=msg2scan.replace(r'\s+', ' ')
 
     # REPLACING LEADING AND TRAILING WHITE SPACE BY SINGLE WHITE SPACE
-    msg2scan=msg2scan.replace(r'^\s+|\s+?$', '')
+    msg2scan=msg2scan.replace(r'^\s+|\s+?$', '') 
 
     #REPLACING CONTACT NUMBERS
     msg2scan=msg2scan.replace(r'^\(?[\d]{3}\)?[\s-]?[\d]{3}[\s-]?[\d]{4}$','contact number')
@@ -87,8 +111,9 @@ def single_scan():
 
     #################################### DATA CLEANING END ######################################
 
-    index = complete_scan_text([msg2scan])
-
+    index, report = complete_scan_text([msg2scan])
+    printv(report)
+    return index, report
 
 
 def whatsapp_scan():
@@ -110,7 +135,6 @@ def whatsapp_scan():
         links_in_chatmessage = re.findall('http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\), ]|(?:%[0-9a-fA-F][0-9a-fA-F]))+',message)
         linksinchat_all += links_in_chatmessage
     #### INITIAL FILTERING END #########################
-    print(sus_messages)
     ## Database Update ##
     details = []
     auth = input("\nEnter message author to be scanned: ")
@@ -121,22 +145,56 @@ def whatsapp_scan():
             spam_msg = sus["msg"]
             msg2scan.append(spam_msg)
 
-    index = complete_scan_text(msg2scan, linksinchat_all)
-    if index < 6:
-        filepath = r"C:\Users\Anutosh\Desktop\detail.txt"  # Change the file path to your needs
-        detail = {"Whatsapp Reports": {'author': str(auth), 'threat index': index}}
-        details.append(detail)
+    index, report = complete_scan_text(msg2scan, linksinchat_all)
+    # if index < 6:
+    #     filepath = r"C:\Users\Anutosh\Desktop\detail.txt"  # Change the file path to your needs
+    #     detail = {"Whatsapp Reports": {'author': str(auth), 'threat index': index}}
+    #     details.append(detail)
 
 
-    with open(filepath, 'a') as file:
-        file.write(str(details))
+    # with open(filepath, 'a') as file:
+    #     file.write(str(details))
     # db.update_storage(filepath)
     ## Database Update End ##
+    return index, report
     
 
 def file_scan():
     fpath = str(input("Filepath of file to scan: "))
-    vt2.active_scan_file(fpath)
+    f_type, analysis_stats, total_votes, name, size = vt.active_scan_file(fpath)
+    stat = eval(analysis_stats)
+    mal_file_report = ""
+    mal_found = False
+    sus_found = False
+    undetected = False
+    harmless = False
+    if int(stat['undetected']) > int(stat['harmless']) + int(stat['malicious']) + int(stat['suspicious']):
+        undected = True
+        mal_file_report += f"File: {name}  was undetected {stat['undetected']} times by various scanners!"
+        printv("\n[+]"+mal_file_report)
+        printv("Should be ALERT!", color='RED')
+    if int(stat['malicious'])>0:
+        mal_file_report += f"Url: {name}  was found malicous {stat['malicious']} times by various scanners!"
+        printv("\n[+]"+mal_file_report, color='RED')
+        mal_found = True
+    if int(stat['suspicious']) > 0:
+        mal_file_report += f"Url: {name}  was found suspicious {stat['suspicious']} times by various scanners!"
+        printv("\n[+]"+mal_file_report, color='RED')
+    if int(stat['harmless']) > int(stat['undetected']) + int(stat['malicious']) + int(stat['suspicious']):
+        mal_file_report += f"Url: {name}  was found harmless {stat['harmless']} times by various scanners!"
+        printv("\n[+]"+mal_file_report, color="GREEN")
+    
+
+    if not mal_found and not undetected and not sus_found:
+        mal_file_report = f"File: {name}  was not found explicitly malicous!"
+        printv(mal_file_report)
+
+    file_report = f"""Virustotal Scan Report:
+    \n[+]File Name: {name}
+    \n[+]File Type: {f_type}
+    \n[+]File Size: {size} 
+    \n[+]{mal_file_report}"""
+    return file_report
 
 
 def complete_scan_text(text_list=[], linklist=[]):
@@ -155,15 +213,17 @@ def complete_scan_text(text_list=[], linklist=[]):
     suslinks = []
     linksscannedcount = 0
     for link in linklist:
-        try:
-            sus_percent, malcount, suscount = vt2.active_scanlink(link)
+        if [total_votes, analysis_stats] == ['err', 'err']:
+            mallinks.append(f"Failed to send URL: {link} for analysis and get the report")
+            suslinks.append(f"Failed to send URL: {link} for analysis and get the report")
+        else:
+            total_votes, analysis_stats = vt.active_scanlink(link)
+            stat = eval(analysis_stats)
             linksscannedcount += 1
-            if malcount > 0:
-                mallinks.append(f"\nLink Reported malicious: {malcount} times\n" + link)
-            if suscount > 0:
-                suslinks.append(f"\nLink Reported suspicious: {suscount} times\n" + link)
-        except Exception as e:
-            printv(e)
+            if int(stat['malicious']) > 0:
+                mallinks.append(f"\nLink Reported malicious: {int(stat['malicious'])} times\n" + link)
+            if int(stat['suspicious']) > 0:
+                suslinks.append(f"\nLink Reported suspicious: {int(stat['suspicious'])} times\n" + link)
     printv()
 
     printv(f"\n[+] No. of links scanned: {linksscannedcount}")
@@ -177,9 +237,7 @@ def complete_scan_text(text_list=[], linklist=[]):
                 iplinks.append(line)
     except Exception as e:
         printv(e)
-    # printv(links_in_email)
-    # url1 = "http://www.webconfs.com/domain-age.php"
-    # for url in links_in_email:
+
 
     spear_output, svm_output = model_exe.main_model(text_list)
     mean_spear, high_spear, mesg_spear = spear_output
@@ -197,29 +255,69 @@ def complete_scan_text(text_list=[], linklist=[]):
         
 
     ## ALERT PRINTING ######################################################
+    blacklist_report = ""
+    mallink_alert = ""
+    mallink_found = ""
+    suslink_found = ""
+    ip_report = ""
     if len(blacklistedwords) > 0:
         printv(f"\nVIRUSTOTAL SCAN RESULTS", color="RED")
         printv(f"\nBlacklisted phrases found {blacklistedwordscnt} times", color="RED")
         printv(f"\nBlacklisted phrases found:\n", color="RED")
         blacklistedwords = [x.strip() for x in blacklistedwords]
         printv(blacklistedwords, color="RED")
+        blacklist_report = f"""\nBlacklisted phrases found {blacklistedwordscnt} times
+        \nBlacklisted phrases found:\n {blacklistedwords}
+        """
     for i in suslinks:
         printv(i, color="RED")
+        suslink_found+=i
     for i in mallinks:
         printv(i, color="RED")
+        mallink_found+=i
     if len(mallinks) > 0:
         printv("\n[**] WARNING!! THIS CONTAINS MALICIOUS ATTACHMENTS/LINKS.\n", color="RED")
+        mallink_alert = "\n[**] WARNING!! THIS CONTAINS MALICIOUS ATTACHMENTS/LINKS.\n"
     if len(iplist) > 0:
         printv("\nIP ADDRESSES FOUND IN LINKS (SUSPICIOUS)\n", color="RED")
+        ip_report = f"\nIP ADDRESSES FOUND IN LINKS (SUSPICIOUS)\n"
         for ip in iplinks:
             printv(ip, color="RED")
+            ip_report+="\n ip"
     
     ## ALERT PRINTING END ######################################################
 
 
     ## Generating Threat Report ################################################
+    report = f"""
+    \n[+] SCANNING FOUND LINKS
+    \n[+] No. of links scanned: {linksscannedcount}
+    \n {mallink_alert}
+    \n Malicious Links: {mallink_found}
+    \n Suspicious Links: {suslink_found}
+    \n[+] {blacklist_report}
+    \n[+] {ip_report}
+    \n[+] AI prediction percentage of phishing attempt: {mean_spear}%
+    \n[+] Maximum phishing percentage of scanned messages: {high_spear}%
+          Message: {mesg_spear} 
+    """
 
-    return index
+    return index, report
+
+
+def update_to_db(choice, report):
+    ## Database Update ##
+    print("Writing to Database....")
+    details = []
+    if choice:
+        filepath = r"resources\spam_details.txt"  # Change the file path to your needs
+        details.append(report)
+
+    with open(filepath, 'a') as file:
+        file.write(str(details))
+    db.update_storage(filepath)
+    # Database Update End ##
+
 
 
 ################# Executable for CLI tool #######################
@@ -232,18 +330,25 @@ if __name__ == "__main__":
         sys.exit(1)
 
     if scantype == 1:
-        scan_link()
+        report = scan_link()
 
     if scantype == 2:
-        eml_scan()
+        index, report = eml_scan()
         
     if scantype == 3:
-        single_scan()
+        index, report = single_scan()
 
     if scantype == 4:
-        whatsapp_scan
-
-
+        index, report = whatsapp_scan()
 
     if scantype == 5:
-        file_scan()
+        report = file_scan()
+    
+    try:
+        update_choice = input("Submit to database?[yes/no], Default = no:  ")
+        if update_choice.lower() == 'yes' or update_choice.lower() == 'y':
+            update_to_db(True, report)
+        else:
+            pass
+    except:
+        sys.exit(1)
