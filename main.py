@@ -5,11 +5,10 @@ from printv import printv
 import re
 import sys
 import model_exe
-import whatsapp_analysis
-import db
+import whatsapp_analysis as whatsapp_analysis
+import db as db
 
-def scan_link():
-    url2scan = str(input("Url: "))
+def scan_link(url2scan):
     print("\nSCANNING URL. THIS MIGHT TAKE A MINUTE.")
     total_votes, analysis_stats = vt.active_scanlink(url=url2scan)
     if [total_votes, analysis_stats] == ['err', 'err']:
@@ -56,10 +55,9 @@ def scan_link():
     return link_report
 
 
-def eml_scan():
-    emlfile = str(input(".eml file: "))
+def eml_scan(emlfile):
     email_subject, received_from_addr, received_from_ip, reply_to, emailtext, links_in_email = emlscan.parse_eml(emlfile)
-    index, report = complete_scan_text([email_subject + " " + emailtext], linklist=links_in_email)
+    report = complete_scan_text([email_subject + " " + emailtext], linklist=links_in_email)
     sus_details = []
     # if index < 6:
     #     filepath = r"C:\Users\Anutosh\Desktop\detail.txt"  # Change the file path to your needs
@@ -70,12 +68,11 @@ def eml_scan():
     # with open(filepath, 'w') as file:
     #     file.write(str(sus_details))
     # db.update_storage(filepath)
-    return index, report
+    return report
 
 
-def single_scan():
+def single_scan(msg2scan):
     ## Single Message Scan
-    msg2scan = str(input("Text message to scan: "))
 
     ## Extracting links before replacing them
     links_in_chatmessage = re.findall('http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\), ]|(?:%[0-9a-fA-F][0-9a-fA-F]))+',msg2scan)
@@ -111,16 +108,15 @@ def single_scan():
 
     #################################### DATA CLEANING END ######################################
 
-    index, report = complete_scan_text([msg2scan])
+    report = complete_scan_text([msg2scan], links_in_chatmessage)
     printv(report)
-    return index, report
+    return report
 
 
-def whatsapp_scan():
+def whatsapp_scan(chattxt, auth):
     ## whatsapp threat report from txt file
 
     ################ INITIAL FILTERING OF WHATSAPP MESSAGES #########################
-    chattxt = str(input("Filepath of whatsapp chat file(.txt): "))
     parsedchat_authors, parsedchat_messages = whatsapp_analysis.parse_chat_file(chattxt)
     sus_messages = []
     chatblacklistedwordsfoundall = []
@@ -137,7 +133,7 @@ def whatsapp_scan():
     #### INITIAL FILTERING END #########################
     ## Database Update ##
     details = []
-    auth = input("\nEnter message author to be scanned: ")
+
     msg2scan = []
 
     for sus in sus_messages:
@@ -145,7 +141,7 @@ def whatsapp_scan():
             spam_msg = sus["msg"]
             msg2scan.append(spam_msg)
 
-    index, report = complete_scan_text(msg2scan, linksinchat_all)
+    report = complete_scan_text(msg2scan, linksinchat_all)
     # if index < 6:
     #     filepath = r"C:\Users\Anutosh\Desktop\detail.txt"  # Change the file path to your needs
     #     detail = {"Whatsapp Reports": {'author': str(auth), 'threat index': index}}
@@ -156,13 +152,12 @@ def whatsapp_scan():
     #     file.write(str(details))
     # db.update_storage(filepath)
     ## Database Update End ##
-    return index, report
+    return report
     
 
-def file_scan():
-    fpath = str(input("Filepath of file to scan: "))
-    f_type, analysis_stats, total_votes, name, size = vt.active_scan_file(fpath)
-    stat = eval(analysis_stats)
+def file_scan(fpath):
+    f_type, analysis_stats, total_votes, name, size = vt.active_scanfile(fpath)
+    stat = eval(str(analysis_stats))
     mal_file_report = ""
     mal_found = False
     sus_found = False
@@ -186,7 +181,7 @@ def file_scan():
     
 
     if not mal_found and not undetected and not sus_found:
-        mal_file_report = f"File: {name}  was not found explicitly malicous!"
+        mal_file_report += f"\nFile: {name}  was not found explicitly malicous!"
         printv(mal_file_report)
 
     file_report = f"""Virustotal Scan Report:
@@ -213,12 +208,12 @@ def complete_scan_text(text_list=[], linklist=[]):
     suslinks = []
     linksscannedcount = 0
     for link in linklist:
+        total_votes, analysis_stats = vt.active_scanlink(link)
         if [total_votes, analysis_stats] == ['err', 'err']:
             mallinks.append(f"Failed to send URL: {link} for analysis and get the report")
             suslinks.append(f"Failed to send URL: {link} for analysis and get the report")
         else:
-            total_votes, analysis_stats = vt.active_scanlink(link)
-            stat = eval(analysis_stats)
+            stat = eval(str(analysis_stats))
             linksscannedcount += 1
             if int(stat['malicious']) > 0:
                 mallinks.append(f"\nLink Reported malicious: {int(stat['malicious'])} times\n" + link)
@@ -243,6 +238,7 @@ def complete_scan_text(text_list=[], linklist=[]):
     mean_spear, high_spear, mesg_spear = spear_output
     mean_svm, high_svm, mesg_svm = svm_output
     error = (abs(mean_spear-mean_svm)/mean_svm) * 100
+    
     #threat index calculation
     printv(f"AI prediction percentage of phishing attempt: {mean_spear}%")
     index = 10 - int((mean_spear/100)*9)
@@ -290,19 +286,20 @@ def complete_scan_text(text_list=[], linklist=[]):
 
     ## Generating Threat Report ################################################
     report = f"""
-    \n[+] SCANNING FOUND LINKS
-    \n[+] No. of links scanned: {linksscannedcount}
-    \n {mallink_alert}
-    \n Malicious Links: {mallink_found}
-    \n Suspicious Links: {suslink_found}
-    \n[+] {blacklist_report}
-    \n[+] {ip_report}
-    \n[+] AI prediction percentage of phishing attempt: {mean_spear}%
-    \n[+] Maximum phishing percentage of scanned messages: {high_spear}%
-          Message: {mesg_spear} 
+    \n[+] SCANNING FOUND LINKS\n
+    \n[+] No. of links scanned: {linksscannedcount}\n
+    \n {mallink_alert}\n
+    \n Malicious Links: {mallink_found}\n
+    \n Suspicious Links: {suslink_found}\n
+    \n[+] {blacklist_report}\n
+    \n[+] {ip_report}\n
+    \n[+] AI prediction percentage of phishing attempt: {mean_spear}%\n
+    \n[+] Maximum phishing percentage of scanned messages: {high_spear}%\n
+          Message: {mesg_spear}\n
+    \n[+] Detected Threat Index: {index}\n
     """
 
-    return index, report
+    return report
 
 
 def update_to_db(choice, report):
@@ -330,19 +327,25 @@ if __name__ == "__main__":
         sys.exit(1)
 
     if scantype == 1:
-        report = scan_link()
+        url2scan = str(input("Url: "))
+        report = scan_link(url2scan)
 
     if scantype == 2:
-        index, report = eml_scan()
+        emlfile = str(input(".eml file: "))
+        report = eml_scan(emlfile)
         
     if scantype == 3:
-        index, report = single_scan()
+        msg2scan = str(input("Text message to scan: "))
+        report = single_scan(msg2scan)
 
     if scantype == 4:
-        index, report = whatsapp_scan()
+        chattxt = str(input("Filepath of whatsapp chat file(.txt): "))
+        auth = input("\nEnter message author to be scanned: ")
+        report = whatsapp_scan(chattxt, auth)
 
     if scantype == 5:
-        report = file_scan()
+        fpath = str(input("Filepath of file to scan: "))
+        report = file_scan(fpath)
     
     try:
         update_choice = input("Submit to database?[yes/no], Default = no:  ")

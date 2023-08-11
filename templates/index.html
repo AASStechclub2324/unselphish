@@ -26,27 +26,21 @@
             <input class="submitbutton" type="submit" value="Submit">
         </form>
 
-        <h2>Scan Domain</h2>
-        <form action="/scan_domain" method="post">
-            <input class="fileinput" type="text" name="scan_domain" required>
-            <input type="submit" value="Submit" class="submitbutton">
-        </form>
-
         <h2>Scan Singular Message</h2>
         <form action="/scan_singular_message" method="post">
             <input class="fileinput" type="text" name="scan_message" required>
             <input type="submit" value="Submit" class="submitbutton">
         </form>
 
-        <h2>Threat Report From WhatsApp Chat (include author's name)</h2>
-        <form action="/whatsapp_report" method="post" enctype="multipart/form-data">
+        <h2>Threat Report From WhatsApp Chat</h2>
+        <form action="/scan_whatsapp" method="post" enctype="multipart/form-data">
             <input class="fileinput" type="file" name="whatsapp_report" required>
             <input class="fileinput" type="text" name="author" required>
             <input class="submitbutton" type="submit" value="Upload">
         </form>
 
         <h2>Threat Report from Email (.eml)</h2>
-        <form action="/email_report" method="post" enctype="multipart/form-data">
+        <form action="/scan_email" method="post" enctype="multipart/form-data">
             <input class="fileinput" type="file" name="email_report" required>
             <input class="submitbutton" type="submit" value="Upload">
         </form>
