@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Unselphish</title>
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css2?family=Comfortaa&display=swap">
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css2?family=Source+Code+Pro&display=swap">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='report.css') }}">
+</head>
+
+<!-- -->
+<script>
+    function saveValue() {
+
+    }
+</script>
+
+<body>
+    <div class="header">
+        <h1>Unselphish</h1>
+        <div class="menu-content">
+            <a href="/">Home</a>
+            <a href="/about">About</a>
+            <a href="/credits">Credits</a>
+            <a href="/license">License</a>
+        </div>
+    </div>
+    <div class="gap">
+    </div>
+    <div class="outputwindow">
+        <p>
+            {{ output }}
+        </p>
+        <p>Submit to database?</p>
+        <form action="\submitToDatabase" method="post">
+            <input class="submitbutton" type="submit" value="Yes">
+        </form>
+        <form action="\dontSubmitToDatabase" method="post">
+            <input class="submitbutton" type="submit" value="No">
+        </form>
+    </div>
+</body>
+</html>
