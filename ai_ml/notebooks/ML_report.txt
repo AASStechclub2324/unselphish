@@ -1,0 +1,56 @@
+ML Models runnning......
+20.0
+72.88914057713207
+51.85142258716908
+67.91625773632538
+47.60024516316126
+64.0
+[54.042844343964624]
+
+((96.15113928865732, 96.15113928865732, "Guess what? You have been shortlisted to win a free HP Laptop. It is a one-time oppurtunity. Don't miss this!! Txt on 9876543234 to claim your reward"))
+
+--------------------------------------------------
+ML Models runnning......
+0.0
+56.61012875497613
+50.806198396964675
+61.4068634232387
+21.15109884252673
+46.0
+[39.32904823628437]
+((59.61294032511017, 59.61294032511017, "Alert!! Win a free Apple watch today. Call at 0987657654 to claim your reward. Hurry! Don't Miss this one-time opportunity!!"))
+
+--------------------------------------------------
+ML Models runnning......
+0.0
+69.13375134818412
+48.70226776687955
+91.96797320315339
+17.150944801199273
+62.0
+[48.15915618656939]
+((86.7351361173319, 86.7351361173319, 'Today we want to inform you that the application period for 15.000 free Udacity Scholarships in Data Science is now open! Please apply by November 16th, 2020 via https://www.udacity.com/bertelsmann-tech-scholarships.'))
+
+--------------------------------------------------
+ML Models runnning......
+60.0
+77.78467967110228
+48.32262371950608
+88.3012838829657
+37.88393863983656
+64.0
+[62.71542098556844]
+((5.824823719800036, 5.824823719800036, 'your microsoft account has been compromised ,you must update before or else your account going to close click to update'))
+
+--------------------------------------------------
+ML Models runnning......
+20.0
+74.86468745138411
+51.58027092666947
+75.51971603601596
+90.41195665292376
+78.0
+[65.06277184449888]
+((15.361827771761874, 15.361827771761874, 'Subject: You have (3) failed email deliveries\n    Sender address: noreply@domain.com\n    Sender ip:\n    Reply_to:\n\n    ======================================================\n\n    you have (3) failed email deliveries verify your information to deliver your e-mails  brad@malware-traffic-analysis.net\xa0 retrieve your mails\xa0   please kindly retrieve your email\n\n    ======================================================'))
+
+--------------------------------------------------
