@@ -1,5 +1,4 @@
 from flask import Flask, render_template, request, jsonify, redirect, session
-# from ..main import *
 import os
 import sys
 sys.path.append( r'C:\Users\USER\Desktop\Unselphish')
