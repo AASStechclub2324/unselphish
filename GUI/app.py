@@ -1,104 +1,121 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, redirect, session
+# from ..main import *
+import os
+import sys
+sys.path.append( r'C:\Users\USER\Desktop\Unselphish')
+from main import *  
+
+from threat_leaderboard import generate_leaderboard
+
 
 #variables
+upload = r'\uploads'
 submitToDatabase=False
 
 app = Flask(__name__)
+app.secret_key = "asdfghjkdasdfghjklzxcvbhjkioerfghnujhbfvbvbnmfgbxcvgyuikerthv"
+app.config['uploadFolder'] = upload
 
-@app.route('/')
+@app.before_request
+def set_session():
+    session['submittodatabase'] = False
+
+@app.route('/', methods=['GET', 'POST'])
 def index():
+    session['submittodatabase'] = False
     return render_template('index.html')
 
-@app.route('/about')
+@app.route('/about', methods=['GET', 'POST'])
 def about():
     return render_template('about.html')
 
-@app.route('/credits')
+@app.route('/credits', methods=['GET', 'POST'])
 def credits():
     return render_template('credits.html')
 
-@app.route('/license')
+@app.route('/license', methods=['GET', 'POST'])
 def license():
     return render_template('license.html')
 
 @app.route('/leaderboard')
 def leaderboard():
-    #set output to leaderboard list
-    output=[]
+    output = generate_leaderboard()
     return render_template('leaderboard.html', output=output)
 
-@app.route('/scan_link', methods=['POST'])
-def scan_link():
-    global submitToDatabase
-    submitToDatabase = False
+@app.route('/scan_link', methods=['GET', 'POST'])
+def sclink():
     link = request.form.get('scan_link')
-    output=link
+    report = scan_link(link)
+    output=report
+    session['report'] = output
     return render_template('report.html', output=output)
 
-@app.route('/scan_domain', methods=['POST'])
-def scan_domain():
-    global submitToDatabase
-    submitToDatabase = False
-    domain = request.form.get('scan_domain')
-    output=domain    
-    return render_template('report.html', output=output)
-
-@app.route('/scan_message', methods=['POST'])
+@app.route('/scan_singular_message', methods=['GET', 'POST'])
 def scMsg():
-    global submitToDatabase
-    submitToDatabase = False
     msg = request.form.get('scan_message')
-    output=msg    
+    report = single_scan(msg)
+    output=report
+    session['report'] = output
     return render_template('report.html', output=output)
 
-@app.route('/whatsapp_report', methods=['POST'])
-def whatsapp_report():
-    global submitToDatabase
-    submitToDatabase = False
-    author=request.form.get('author')
+@app.route('/scan_whatsapp', methods=['GET', 'POST'])
+def scWhatsapp():
+    author = request.form.get('author')
     output=''
     if 'whatsapp_report' in request.files:
         whatsapp_file = request.files['whatsapp_report']
-        output = whatsapp_file.filename + author
+        filename = whatsapp_file.filename
+        path = os.path.join(app.config['uploadFolder'], filename)
+        whatsapp_file.save(path)
+        report = whatsapp_scan(path, author)
+        output = report
+        session['report'] = output
+        os.remove(path)
     else:
         output = "No WhatsApp file uploaded."
     return render_template('report.html', output=output)
 
-@app.route('/email_report', methods=['POST'])
-def email_report():
-    global submitToDatabase
-    submitToDatabase = False
+@app.route('/scan_email', methods=['GET', 'POST'])
+def scEmail():
     output=''
     if 'email_report' in request.files:
         eml_file = request.files['email_report']
-        output = eml_file.filename
+        filename = eml_file.filename
+        path = os.path.join(app.config['uploadFolder'], filename)
+        eml_file.save(path)
+        report = eml_scan(path)
+        output = report
+        session['report'] = output
+        os.remove(path)
     else:
         output = "No .eml file uploaded."
     return render_template('report.html', output=output)
 
-@app.route('/scan_file', methods=['POST'])
-def scan_file():
-    global submitToDatabase
-    submitToDatabase = False
+@app.route('/scan_file', methods=['GET', 'POST'])
+def scFile():
     output=''
     if 'scan_file' in request.files:
         file = request.files['scan_file']
-        output = file.filename
+        filename = file.filename
+        path = os.path.join(app.config['uploadFolder'], filename)
+        file.save(path)
+        output = file_scan(path)
+        session['report'] = output
+        os.remove(path)
     else:
         output = "No file uploaded."
     return render_template('report.html', output=output)
 
-@app.route('/submitToDatabase', methods=['POST'])
+@app.route('/submitToDatabase', methods=['GET', 'POST'])
 def submitYes():
-    global submitToDatabase
-    submitToDatabase = True
-    return render_template('index.html')
+    session['submittodatabase'] = True
+    update_to_db(True, session['report'])
+    return redirect('/')
 
-@app.route('/dontSubmitToDatabase', methods=['POST'])
+@app.route('/dontSubmitToDatabase', methods=['GET', 'POST'])
 def submitNo():
-    global submitToDatabase
-    submitToDatabase = False
-    return render_template('index.html')
+    session['submittodatabase'] = False
+    return redirect('/')
 
 '''
 @app.route('/update_toggle_status', methods=['POST'])
@@ -118,4 +135,4 @@ def update_toggle_status():
 '''
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0')
+    app.run(host='0.0.0.0', port=5000, debug=True)
