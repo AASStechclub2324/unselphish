@@ -57,18 +57,14 @@ def scan_link(url2scan):
 
 def eml_scan(emlfile):
     email_subject, received_from_addr, received_from_ip, reply_to, emailtext, links_in_email = emlscan.parse_eml(emlfile)
+    printv(f"""[+]Sender's Email Address: {received_from_addr}
+\n[+]Sender's IP: {received_from_ip}""")
     report = complete_scan_text([email_subject + " " + emailtext], linklist=links_in_email)
-    sus_details = []
-    # if index < 6:
-    #     filepath = r"C:\Users\Anutosh\Desktop\detail.txt"  # Change the file path to your needs
-    #     detail = {"Email Reports": {"Sender's Address": received_from_addr, "Sender's IP": received_from_ip, "threat index": index}}
-    #     sus_details.append(detail)
-
-
-    # with open(filepath, 'w') as file:
-    #     file.write(str(sus_details))
-    # db.update_storage(filepath)
-    return report
+    eml_report = f"""[+]Sender's Email Address: {received_from_addr}
+\n[+]Sender's IP: {received_from_ip}
+\n[+]Report Form Complete Scan: {report}"""
+    
+    return eml_report
 
 
 def single_scan(msg2scan):
@@ -142,16 +138,6 @@ def whatsapp_scan(chattxt, auth):
             msg2scan.append(spam_msg)
 
     report = complete_scan_text(msg2scan, linksinchat_all)
-    # if index < 6:
-    #     filepath = r"C:\Users\Anutosh\Desktop\detail.txt"  # Change the file path to your needs
-    #     detail = {"Whatsapp Reports": {'author': str(auth), 'threat index': index}}
-    #     details.append(detail)
-
-
-    # with open(filepath, 'a') as file:
-    #     file.write(str(details))
-    # db.update_storage(filepath)
-    ## Database Update End ##
     return report
     
 
@@ -234,20 +220,14 @@ def complete_scan_text(text_list=[], linklist=[]):
         printv(e)
 
 
-    spear_output, svm_output = model_exe.main_model(text_list)
+    spear_output, lor_output = model_exe.main_model(text_list)
     mean_spear, high_spear, mesg_spear = spear_output
-    mean_svm, high_svm, mesg_svm = svm_output
-    error = (abs(mean_spear-mean_svm)/mean_svm) * 100
+    mean_rfc, high_rfc, mesg_rfc = lor_output
+    error = (abs(mean_spear-mean_rfc)/mean_rfc) * 100
     
     #threat index calculation
     printv(f"AI prediction percentage of phishing attempt: {mean_spear}%")
     index = 10 - int((mean_spear/100)*9)
-    # if error <= 10:
-    #     index = 10 - int((mean_spear/100)*9)
-    #     printv(f"AI prediction percentage of phishing attempt: {mean_spear}%")
-    # else:
-    #     printv(f"\nModel couldn't analyze text.\n", color='red')
-
         
 
     ## ALERT PRINTING ######################################################
@@ -293,9 +273,9 @@ def complete_scan_text(text_list=[], linklist=[]):
     \n Suspicious Links: {suslink_found}\n
     \n[+] {blacklist_report}\n
     \n[+] {ip_report}\n
-    \n[+] AI prediction percentage of phishing attempt: {mean_spear}%\n
-    \n[+] Maximum phishing percentage of scanned messages: {high_spear}%\n
-          Message: {mesg_spear}\n
+    \n[+] AI prediction percentage of phishing attempt: {mean_rfc}%\n
+    \n[+] Maximum phishing percentage of scanned messages: {high_rfc}%\n
+          Message: {mesg_rfc}\n
     \n[+] Detected Threat Index: {index}\n
     """
 
@@ -305,13 +285,11 @@ def complete_scan_text(text_list=[], linklist=[]):
 def update_to_db(choice, report):
     ## Database Update ##
     print("Writing to Database....")
-    details = []
     if choice:
         filepath = r"resources\spam_details.txt"  # Change the file path to your needs
-        details.append(report)
 
     with open(filepath, 'a') as file:
-        file.write(str(details))
+        file.write(str(report))
     db.update_storage(filepath)
     # Database Update End ##
 
@@ -320,6 +298,8 @@ def update_to_db(choice, report):
 ################# Executable for CLI tool #######################
 
 if __name__ == "__main__":
+
+    message_scanned = False
 
     try:
         scantype = int(input('''1. Scan link (virustotal)\n2. Threat report from downloaded email (.eml)\n3. Scan singular message\n4. Threat report from exported whatsapp chat \n5. Scan file (virustotal)\n\nOption: '''))
@@ -337,20 +317,25 @@ if __name__ == "__main__":
     if scantype == 3:
         msg2scan = str(input("Text message to scan: "))
         report = single_scan(msg2scan)
+        message_scanned = True
 
     if scantype == 4:
         chattxt = str(input("Filepath of whatsapp chat file(.txt): "))
         auth = input("\nEnter message author to be scanned: ")
         report = whatsapp_scan(chattxt, auth)
+        message_scanned = True
 
     if scantype == 5:
         fpath = str(input("Filepath of file to scan: "))
         report = file_scan(fpath)
     
     try:
-        update_choice = input("Submit to database?[yes/no], Default = no:  ")
-        if update_choice.lower() == 'yes' or update_choice.lower() == 'y':
-            update_to_db(True, report)
+        if message_scanned:
+            update_choice = input("Submit to database?[yes/no], Default = no:  ")
+            if update_choice.lower() == 'yes' or update_choice.lower() == 'y':
+                update_to_db(True, report)
+            else:
+                pass
         else:
             pass
     except:
