@@ -1,29 +1,16 @@
-body {
-    font-family: 'Comfortaa', cursive;
-    margin: 0;
-    padding: 0;
-    background-color: #ececec;
-}
-
 .header {
-    background-color: #333;
-    color: #fff;
+    font-family: 'VT323';
+    background-color: rgb(41, 41, 43);
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
     padding: 20px;
-    text-align: center;
-}
-
-.header h1 {
-    margin: 0;
-}
-
-.menu-btn {
-    cursor: pointer;
-    margin-top: -30px;
-    font-size: 30px;
+    opacity: 0.8;
 }
 
 .menu-content {
     margin-top: 10px;
+    font-size: 30px;
 }
 
 .menu-content a {
@@ -34,27 +21,52 @@ body {
     margin: 0 5px;
 }
 
-.gap {
-    background:none;
-    height:20px;
-    display:inline-block;
+.graphics {
+    opacity: 0.8;
+    align-items: center;
+    margin: auto;
+    text-align: center; 
+    margin-top: 50px; 
+    font-family: 'Geo';
+    background-color: rgb(41, 41, 43);
+    padding: 5px;
+    width: 70%;
 }
 
 .outputwindow {
-    font-family: 'Source Code Pro';
-    border-radius: 25px;
+    opacity: 0.9;
+    margin-top: 50px;
+    background-color: rgb(41, 41, 43);
+    color: aliceblue;
+    font-family: 'Sarpanch';
     text-align: center;
     margin: auto;
-    width: 50%;
-    border: 3px solid rgb(22, 24, 22);
+    width: 70%;
     padding: 10px;
 }
 
-.submitreport {
-    display: inline-block;
-    vertical-align: middle;
+.gap {
+    background:none;
+    height:50px;
+    display:inline-block;
 }
 
 .submitbutton {
     border-radius: 5px;
+    font-family: 'Sarpanch';
+}
+
+.query {
+    opacity: 0.9;
+    margin-top: 50px;
+    background-color: rgb(41, 41, 43);
+    color: aliceblue;
+    font-family: 'Sarpanch';
+    text-align: center;
+    margin: auto;
+    width: 70%;
+    padding: 10px;
+    display: flex;  
+    align-items: center;
+    align-content: center;
 }

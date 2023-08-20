@@ -1,39 +1,16 @@
-
-html,
-body {
-  position: relative;
-  align-items: center;
-  justify-content: center;
-  vertical-align: center;
-  font-size: 20px;
-  font-weight: 100;
-  margin: 0;
-  padding: 0;
-  width: 100%;
-  height: 100%;
-  min-height: 100vh;
-  display: flex;
-  text-align: center;
-  flex-direction: column;
-  background: black;
-  background-size: cover;
-  overflow: hidden;
-}
-
 .header {
     font-family: 'VT323';
-    background-color: #242424;
+    background-color: rgb(41, 41, 43);
     display: flex; 
     justify-content: space-between; 
     align-items: center; 
-    padding: 20px;    
-    z-index: 2;
+    padding: 20px;
+    opacity: 0.8;
 }
 
 .menu-content {
     margin-top: 10px;
     font-size: 30px;
-    z-index: 2;
 }
 
 .menu-content a {
@@ -42,50 +19,62 @@ body {
     text-decoration: none;
     color: #fff;
     margin: 0 5px;
-    z-index: 2;
 }
 
 .graphics {
+    opacity: 0.8;
     align-items: center;
     margin: auto;
     text-align: center; 
     margin-top: 50px; 
     font-family: 'Geo';
-    background-color: #242424;
+    background-color: rgb(41, 41, 43);
     padding: 5px;
     width: 70%;
-    z-index: 2;
 }
 
 .main {
+    opacity: 0.9;
     margin-top: 50px;
-    background-color: #242424;
+    background-color: rgb(41, 41, 43);
     color: aliceblue;
     font-family: 'Sarpanch';
     text-align: center;
     margin: auto;
     width: 70%;
     padding: 10px;
-    z-index: 2;
 }
 
 .gap {
     background:none;
     height:50px;
-    z-index: 2;
     display:inline-block;
 }
 
 .fileinput {
     border: 1px solid #333;
-    border-radius: 5px;
     background-color: #ececec;
-    z-index: 2;
+    border-radius: 5px;
+    font-family: 'Sarpanch';
+    color: black;
 }
 
-canvas {
-    background-color: black;
-    position: absolute;
-    display: block;
-    z-index: 1;
-  } 
+.submitbutton {
+    border-radius: 5px;
+    font-family: 'Sarpanch';
+}
+
+input[type="file"]::file-selector-button {
+    border-radius: 5px;
+    font-family: 'Sarpanch';
+}
+
+.query {
+    font-family: 'Geo';
+    background-color: rgb(41, 41, 43);
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    padding: 10px;
+    opacity: 0.8;
+}

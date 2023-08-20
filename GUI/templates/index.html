@@ -8,10 +8,8 @@
     <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css2?family=Sarpanch&display=swap">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='index.css') }}">
 </head>
-<body>
-    <canvas id="Matrix"></canvas>
-    <main id="main">
-        <header class="header">
+<body style="background-image: url('static/bg.png');">
+    <header class="header">
         <div>
             <!-- Placeholder for your logo -->
             <img src="static/logo.png" alt="Logo" style="width: 100px; height: 100px;">
@@ -70,20 +68,6 @@
     </div>
 
     <div class="gap">
-    </div></main>
-    
-
-    <script type="text/javascript" src="{{ url_for('static', filename='script.js') }}"></script>
-    <script type="text/javascript">
-      var c = document.getElementById("myCanvas");
-      var ctx = c.getContext("2d");
-      var grd = ctx.createLinearGradient(0, 0, 600, 600);
-
-      grd.addColorStop(0, "#FF0000");
-      grd.addColorStop(1, "#00FF00");
-
-      ctx.fillStyle = grd;
-      ctx.fillRect(0, 0, 600, 600);
-    </script>
+    </div>
 </body>
 </html>

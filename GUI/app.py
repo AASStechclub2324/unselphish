@@ -1,9 +1,8 @@
 from flask import Flask, render_template, request, jsonify, redirect, session
-import os
 import sys
-sys.path.append( r'C:\Users\USER\Desktop\Unselphish')
-from main import *  
-
+sys.path.append( r'C:\Users\Anutosh\Unselphish-root\Unselphish')
+from main import *
+import os
 from threat_leaderboard import generate_leaderboard
 
 
@@ -26,7 +25,10 @@ def index():
 
 @app.route('/about', methods=['GET', 'POST'])
 def about():
-    return render_template('about.html')
+    with open('about.txt', 'r') as f:
+        s=f.readlines()
+        output=s
+    return render_template('about.html', output=output)
 
 @app.route('/credits', methods=['GET', 'POST'])
 def credits():
