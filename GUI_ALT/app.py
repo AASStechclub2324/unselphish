@@ -36,6 +36,7 @@ def scan_link():
     submitToDatabase = False
     link = request.form.get('scan_link')
     output=link
+    output=output.splitlines()
     return render_template('report.html', output=output)
 
 @app.route('/scan_domain', methods=['POST'])
@@ -43,7 +44,8 @@ def scan_domain():
     global submitToDatabase
     submitToDatabase = False
     domain = request.form.get('scan_domain')
-    output=domain    
+    output=domain
+    output=output.splitlines()
     return render_template('report.html', output=output)
 
 @app.route('/scan_message', methods=['POST'])
@@ -51,7 +53,8 @@ def scMsg():
     global submitToDatabase
     submitToDatabase = False
     msg = request.form.get('scan_message')
-    output=msg    
+    output=msg
+    output=output.splitlines()
     return render_template('report.html', output=output)
 
 @app.route('/whatsapp_report', methods=['POST'])
@@ -65,6 +68,7 @@ def whatsapp_report():
         output = whatsapp_file.filename + author
     else:
         output = "No WhatsApp file uploaded."
+    output=output.splitlines()
     return render_template('report.html', output=output)
 
 @app.route('/email_report', methods=['POST'])
@@ -77,6 +81,7 @@ def email_report():
         output = eml_file.filename
     else:
         output = "No .eml file uploaded."
+    output=output.splitlines()
     return render_template('report.html', output=output)
 
 @app.route('/scan_file', methods=['POST'])
@@ -89,6 +94,7 @@ def scan_file():
         output = file.filename
     else:
         output = "No file uploaded."
+    output=output.splitlines()
     return render_template('report.html', output=output)
 
 @app.route('/submitToDatabase', methods=['POST'])
