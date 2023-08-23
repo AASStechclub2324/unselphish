@@ -7,6 +7,7 @@ import sys
 import model_exe
 import whatsapp_analysis as whatsapp_analysis
 import db as db
+from threat_leaderboard import generate_leaderboard
 
 def scan_link(url2scan):
     print("\nSCANNING URL. THIS MIGHT TAKE A MINUTE.")
@@ -282,15 +283,20 @@ def complete_scan_text(text_list=[], linklist=[]):
     return report
 
 
-def update_to_db(choice, report):
+def update_to_db(choice, report, category):
     ## Database Update ##
     print("Writing to Database....")
-    if choice:
-        filepath = r"resources\spam_details.txt"  # Change the file path to your needs
+    # if choice:
+    #     filepath = r"resources\spam_details.txt"  # Change the file path to your needs
 
-    with open(filepath, 'a') as file:
-        file.write(str(report))
-    db.update_storage(filepath)
+    # with open(filepath, 'a') as file:
+    #     file.write(str(report))
+    # db.update_storage(filepath)
+
+
+    if choice:
+        data = {"Ccategory": category, "Report": report}
+        db.update_db(data)
     # Database Update End ##
 
 
@@ -302,41 +308,48 @@ if __name__ == "__main__":
     message_scanned = False
 
     try:
-        scantype = int(input('''1. Scan link (virustotal)\n2. Threat report from downloaded email (.eml)\n3. Scan singular message\n4. Threat report from exported whatsapp chat \n5. Scan file (virustotal)\n\nOption: '''))
+        scantype = int(input('''1. Scan link (virustotal)\n2. Threat report from downloaded email (.eml)\n3. Scan singular message\n4. Threat report from exported whatsapp chat \n5. Scan file (virustotal)\n6. View Threat Leaderboard \nOption: '''))
     except:
         sys.exit(1)
 
     if scantype == 1:
         url2scan = str(input("Url: "))
         report = scan_link(url2scan)
+        category = "link"
 
     if scantype == 2:
         emlfile = str(input(".eml file: "))
         report = eml_scan(emlfile)
+        category = "emlfile"
         
     if scantype == 3:
         msg2scan = str(input("Text message to scan: "))
         report = single_scan(msg2scan)
-        message_scanned = True
+
+        category = "single_scan"
 
     if scantype == 4:
         chattxt = str(input("Filepath of whatsapp chat file(.txt): "))
         auth = input("\nEnter message author to be scanned: ")
         report = whatsapp_scan(chattxt, auth)
-        message_scanned = True
+        category = "whatsapp"
+
 
     if scantype == 5:
         fpath = str(input("Filepath of file to scan: "))
         report = file_scan(fpath)
+        category = "filepath"
     
     try:
-        if message_scanned:
-            update_choice = input("Submit to database?[yes/no], Default = no:  ")
-            if update_choice.lower() == 'yes' or update_choice.lower() == 'y':
-                update_to_db(True, report)
-            else:
-                pass
+        update_choice = input("Submit to database?[yes/no], Default = no:  ")
+        if update_choice.lower() == 'yes' or update_choice.lower() == 'y':
+            update_to_db(True, report, category)
         else:
             pass
     except:
         sys.exit(1)
+
+    if scantype == 6:
+        leaderboard = generate_leaderboard()
+        for i in leaderboard:
+            print(i+"\n")

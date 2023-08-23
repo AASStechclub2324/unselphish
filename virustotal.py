@@ -4,8 +4,10 @@ import os
 from base64 import urlsafe_b64encode
 import requests
 
+api_key = "05a005915e6bd5d067fa6d4c6c985746a5c2b7d371b840500c2b0630f11c7b1c"
+
 def active_scanlink(url):
-    with virustotal_python.Virustotal("05a005915e6bd5d067fa6d4c6c985746a5c2b7d371b840500c2b0630f11c7b1c") as vtotal:
+    with virustotal_python.Virustotal(api_key) as vtotal:
         try:
             resp = vtotal.request("urls", data={"url": url}, method="POST")
             
@@ -21,19 +23,19 @@ def active_scanlink(url):
     return total_votes, last_analysis_stats
 
 def active_scandomain(url):
-    with virustotal_python.Virustotal("05a005915e6bd5d067fa6d4c6c985746a5c2b7d371b840500c2b0630f11c7b1c") as vtotal:
+    with virustotal_python.Virustotal(api_key) as vtotal:
         resp = vtotal.request(f"domains/{url}")
         printv(resp.data)
 
 def active_scanfile(filepath):
     url = 'https://www.virustotal.com/vtapi/v2/file/scan'
 
-    params = {'apikey': "05a005915e6bd5d067fa6d4c6c985746a5c2b7d371b840500c2b0630f11c7b1c"}
+    params = {'apikey': api_key}
 
     files = {"file": (os.path.basename(filepath), open(os.path.abspath(filepath), "rb"))}
 
     resp = requests.post(url, files=files, params=params)
-    with virustotal_python.Virustotal("05a005915e6bd5d067fa6d4c6c985746a5c2b7d371b840500c2b0630f11c7b1c") as vtotal:
+    with virustotal_python.Virustotal(api_key) as vtotal:
         file_id = resp.json()['sha1']
         report = vtotal.request(f"files/{file_id}")
         f_type = report.data['attributes']['type_description']

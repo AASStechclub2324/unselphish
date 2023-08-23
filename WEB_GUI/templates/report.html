@@ -26,9 +26,9 @@
     <div class="gap">
     </div>
     <div class="outputwindow">
-        <p>
-            {{ output }}
-        </p>
+        {% for element in output %}
+        <p>{{ element }}</p>
+        {% endfor %}
     </div>
     <div class="gap">
     </div>

@@ -27,7 +27,7 @@ def index():
 
 @app.route('/about', methods=['GET', 'POST'])
 def about():
-    with open('about.txt', 'r') as f:
+    with open(r'WEB_GUI\about.txt', 'r') as f:
         s=f.readlines()
         output=s
     return render_template('about.html', output=output)
@@ -38,7 +38,10 @@ def credits():
 
 @app.route('/license', methods=['GET', 'POST'])
 def license():
-    return render_template('license.html')
+    with open(r'LICENSE', 'r') as l:
+        lines = l.readlines()
+        output = lines
+    return render_template('license.html', output=output)
 
 @app.route('/leaderboard')
 def leaderboard():
@@ -50,6 +53,7 @@ def sclink():
     link = request.form.get('scan_link')
     report = scan_link(link)
     output=report
+    output = output.splitlines()
     session['report'] = output
     return render_template('report.html', output=output)
 
@@ -58,6 +62,7 @@ def scMsg():
     msg = request.form.get('scan_message')
     report = single_scan(msg)
     output=report
+    output = output.splitlines()
     session['report'] = output
     return render_template('report.html', output=output)
 
@@ -72,6 +77,7 @@ def scWhatsapp():
         whatsapp_file.save(path)
         report = whatsapp_scan(path, author)
         output = report
+        output = output.splitlines()
         session['report'] = output
         os.remove(path)
     else:
@@ -88,6 +94,7 @@ def scEmail():
         eml_file.save(path)
         report = eml_scan(path)
         output = report
+        output = output.splitlines()
         session['report'] = output
         os.remove(path)
     else:
@@ -103,6 +110,7 @@ def scFile():
         path = os.path.join(app.config['uploadFolder'], filename)
         file.save(path)
         output = file_scan(path)
+        output = output.splitlines()
         session['report'] = output
         os.remove(path)
     else:
@@ -120,22 +128,6 @@ def submitNo():
     session['submittodatabase'] = False
     return redirect('/')
 
-'''
-@app.route('/update_toggle_status', methods=['POST'])
-def update_toggle_status():
-    # Get the boolean value from the request data
-    data = request.json
-    is_enabled = data.get('is_enabled', False)
-
-    # Your Python logic with the boolean value here...
-    # For now, let's just return a simple response
-    if is_enabled:
-        response = {'message': True}
-    else:
-        response = {'message': False}
-
-    return(jsonify(response))
-'''
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
