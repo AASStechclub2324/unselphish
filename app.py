@@ -1,11 +1,8 @@
 from flask import Flask, render_template, request, jsonify, redirect, session
 import os
 import sys
-path = os.path.abspath(r"main.py")
-path = path.rstrip(r"\main.py")
-sys.path.append(path)
-from main import *
-from threat_leaderboard import generate_leaderboard
+from scanner_app import *
+from features.threat_leaderboard import generate_leaderboard
 
 
 #variables
@@ -27,7 +24,7 @@ def index():
 
 @app.route('/about', methods=['GET', 'POST'])
 def about():
-    with open(r'WEB_GUI\about.txt', 'r') as f:
+    with open(r'README.md', 'r') as f:
         s=f.readlines()
         output=s
     return render_template('about.html', output=output)
