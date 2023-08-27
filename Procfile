@@ -1,1 +1,1 @@
-web: sh -c 'cd WEB_GUI && python app.py'
+web: sh -c 'python app.py'

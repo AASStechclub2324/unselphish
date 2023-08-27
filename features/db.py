@@ -15,7 +15,7 @@ from firebase_admin import db
 #     blob.upload_from_filename(filename)
 
 
-cred = credentials.Certificate("firebase-adminsdk-gmw7s-ffb62dd9c5.json")
+cred = credentials.Certificate(r"C:\Users\Anutosh\Unselphish-root\Unselphish\firebase-adminsdk-gmw7s-ffb62dd9c5.json")
 firebase_admin.initialize_app(cred, {
     'databaseURL': 'https://unselphish-default-rtdb.asia-southeast1.firebasedatabase.app'
 })
