@@ -144,7 +144,6 @@ PyJWT
 PyMsgBox 
 pyparsing 
 pyperclip 
-pypiwin32
 PyRect 
 pyrsistent 
 pyscreenshot
