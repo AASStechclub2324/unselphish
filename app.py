@@ -41,16 +41,29 @@ def license():
 
 @app.route('/leaderboard', methods=['GET', 'POST'])
 def leaderboard():
-    output = generate_leaderboard()
-    return render_template('leaderboard.html', output=output)
+    threat_list = generate_leaderboard()
+    output_list = []
+
+    # Cleaning the data
+    for threat in threat_list:
+        local_category = threat['Category']
+        local_report = threat['Report']
+        local_report = local_report.splitlines()
+        output = [f'Category: {local_category}']
+        output.extend(local_report)
+        output_list.append(output)
+
+    print(output_list)
+        
+    return render_template('leaderboard.html', output_list=output_list)
 
 
 @app.route('/scan-report', methods=['GET', 'POST'])
-def report():
+def report_display():
     global report
     output = report
-    output = output.splitlines()
     session['report'] = output
+    output = output.splitlines()
     session['category'] = category
     return render_template('report.html', output=output)
 
@@ -95,7 +108,6 @@ def sclink():
 
 @app.route('/scan_email', methods=['GET', 'POST'])
 def scEmail():
-    output=''
     if 'email_report' in request.files:
         eml_file = request.files['email_report']
         filename = eml_file.filename

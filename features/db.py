@@ -29,7 +29,7 @@ firebase_project_id = "unselphish"
 def load_db():
     chain = []
     ids = []
-    db_ref = db.reference('user_blocks')
+    db_ref = db.reference('report')
     threats_data = db_ref.get()
     if threats_data:
         for id in threats_data:
@@ -43,5 +43,6 @@ def load_db():
 
 
 def update_db(report: dict):
-    db_ref.child("user_blocks").push(report)
+    print("Importing data from RTDB")
+    db_ref.child("report").push(report)
     

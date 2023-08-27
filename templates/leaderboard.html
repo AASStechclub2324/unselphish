@@ -26,8 +26,12 @@
     <div class="gap"></div>
     <div class="main">
         <h1>Leaderboard</h1>
-        {% for element in output %}
-        <p>{{ element }}</p>
+        {% for output in output_list %}
+            <p>-------------------------------------</p>
+            {% for element in output %}
+                <p>{{ element }}</p>
+            {% endfor %}
+            <p>-------------------------------------</p>
         {% endfor %}
     </div>
     <div class="gap"></div>

@@ -221,14 +221,14 @@ def complete_scan_text(text_list=[], linklist=[]):
         printv(e)
 
 
-    spear_output, lor_output = model_exe.main_model(text_list)
-    mean_spear, high_spear, mesg_spear = spear_output
-    mean_rfc, high_rfc, mesg_rfc = lor_output
-    error = (abs(mean_spear-mean_rfc)/mean_rfc) * 100
+    rfc_output = model_exe.main_model(text_list)
+    # mean_spear, high_spear, mesg_spear = spear_output
+    mean_rfc, high_rfc, mesg_rfc = rfc_output
+    # error = (abs(mean_spear-mean_rfc)/mean_rfc) * 100
     
     #threat index calculation
-    printv(f"AI prediction percentage of phishing attempt: {mean_spear}%")
-    index = 10 - int((mean_spear/100)*9)
+    printv(f"AI prediction percentage of phishing attempt: {mean_rfc}%")
+    index = 10 - int((mean_rfc/100)*9)
         
 
     ## ALERT PRINTING ######################################################
@@ -286,16 +286,9 @@ def complete_scan_text(text_list=[], linklist=[]):
 def update_to_db(choice, report, category):
     ## Database Update ##
     print("Writing to Database....")
-    # if choice:
-    #     filepath = r"resources\spam_details.txt"  # Change the file path to your needs
-
-    # with open(filepath, 'a') as file:
-    #     file.write(str(report))
-    # db.update_storage(filepath)
-
 
     if choice:
-        data = {"Ccategory": category, "Report": report}
+        data = {"Category": category, "Report": report}
         db.update_db(data)
     # Database Update End ##
 

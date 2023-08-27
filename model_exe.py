@@ -48,6 +48,7 @@ def execute_spear_models(text):
     return mean_percent, highest, high_msg
 
 def execute_spam_models(text):
+    print("ML Models Running....")
     all_percent = []
     for ind in range(len(text)):
         msg = text[ind]
@@ -57,6 +58,8 @@ def execute_spam_models(text):
         pred_percent = model.predict_proba(msg)
         percent = pred_percent[0][1]*100
         all_percent.append(percent)
+    
+    print("Generating Report Of AI Analysis....")
 
     mean_percent =  sum(all_percent)/len(all_percent)
 
@@ -64,28 +67,11 @@ def execute_spam_models(text):
     high_msg = text[all_percent.index(highest)]
     return mean_percent, highest, high_msg
 
-# def execute_SVM(text):
-#     vectorizer = TfidfVectorizer(stop_words='english', max_features=5000)
-#     all_percent = []
-#     for ind in range(len(text)):
-#         msg = text[ind]
-#         msg = [msg]
-#         msg_tfidf = vectorizer.transform(msg)
-#         model = pickle.load(open(fr'ai_ml/Spam_Model_SVM.sav', 'rb'))
-#         prediction = model.predict(msg_tfidf)
-#         pred_percent = model.predict_proba(msg)
-#         percent = pred_percent[0][1]*100
-#         all_percent.append(percent)
-
-#     mean_percent =  sum(all_percent)/len(all_percent)
-
-#     highest = max(all_percent)
-#     high_msg = text[all_percent.index(highest)]
-#     return mean_percent, highest, high_msg
 
 
 def main_model(input_var):
-    return execute_spear_models(input_var), execute_spam_models(input_var)
+    # return execute_spear_models(input_var), execute_spam_models(input_var)
+    return execute_spam_models(input_var)  # We are not using spear_models because RFC is strong enough and also faster
 
 
 
