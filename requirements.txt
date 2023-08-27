@@ -145,11 +145,6 @@ PyMsgBox
 pyparsing 
 pyperclip 
 pypiwin32
-PyQt5 
-PyQt5-Qt5 
-PyQt5-sip 
-PyQtWebEngine 
-PyQtWebEngine-Qt5 
 PyRect 
 pyrsistent 
 pyscreenshot
