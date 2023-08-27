@@ -158,7 +158,6 @@ python-socks
 pyttsx3
 pytweening 
 pytz 
-pywin32
 PyYAML
 pyzmq 
 ratelim 
