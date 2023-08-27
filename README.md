@@ -1,6 +1,6 @@
 # Unselphish
 
-![Unselphish Logo](https://github.com/AASStechclub2324/unselphish/blob/main/WEB_GUI/static/logo.png)
+![Unselphish Logo](https://github.com/AASStechclub2324/unselphish/blob/main/static/logo.png)
 
 Welcome to Unselphish, your ultimate defense against spam and phishing attacks in the digital realm. Unselphish is a powerful web-based tool that utilizes cutting-edge machine learning models, intelligent rules, and APIs to meticulously analyze user-provided information. Our mission is to create a secure online environment for everyone by identifying and preventing malicious activities.
 
