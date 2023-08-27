@@ -27,7 +27,6 @@ comm
 comtypes 
 construct 
 contourpy 
-Crypto.Cipher
 cryptography 
 cycler 
 debugpy 
