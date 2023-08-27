@@ -172,7 +172,6 @@ scipy
 seaborn 
 shellescape 
 six 
-sklearn
 soupsieve
 SpeechRecognition 
 sqlparse 
