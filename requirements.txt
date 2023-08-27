@@ -26,7 +26,6 @@ colorama==0.4.6
 comm==0.1.3
 comtypes==1.1.14
 construct==2.10.68
-contourpy==1.0.7
 Crypto.Cipher==1
 cryptography==39.0.2
 cycler==0.11.0
