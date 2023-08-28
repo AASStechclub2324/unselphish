@@ -128,9 +128,7 @@ def whatsapp_scan(chattxt, auth):
         links_in_chatmessage = re.findall('http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\), ]|(?:%[0-9a-fA-F][0-9a-fA-F]))+',message)
         linksinchat_all += links_in_chatmessage
     #### INITIAL FILTERING END #########################
-    ## Database Update ##
-    details = []
-
+    
     msg2scan = []
 
     for sus in sus_messages:
@@ -139,6 +137,7 @@ def whatsapp_scan(chattxt, auth):
             msg2scan.append(spam_msg)
 
     report = complete_scan_text(msg2scan, linksinchat_all)
+    report += f"\n author: {auth}"
     return report
     
 

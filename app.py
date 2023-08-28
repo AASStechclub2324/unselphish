@@ -6,7 +6,6 @@ from features.threat_leaderboard import generate_leaderboard
 
 
 #variables
-global report
 global report_thread
 upload = r'uploads'
 report = None
