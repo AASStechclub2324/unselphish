@@ -60,21 +60,21 @@ def leaderboard():
 
 @app.route('/scan-report', methods=['GET', 'POST'])
 def report_display():
-    try:
+    # try:
+    #     global report
+    #     output = report
+    #     session['report'] = output
+    #     output = output.splitlines()
+    #     session['category'] = category
+    #     return render_template('report.html', output=output)
+    # except:
+    #     return render_template('load.html', redirect_url = '/scan-report')
         global report
         output = report
         session['report'] = output
         output = output.splitlines()
         session['category'] = category
         return render_template('report.html', output=output)
-    except:
-        return render_template('load.html', redirect_url = '/scan-report')
-        # global report
-        # output = report
-        # session['report'] = output
-        # output = output.splitlines()
-        # session['category'] = category
-        # return render_template('report.html', output=output)
 
 
 def generate_report(sc_type: int, input_var, auth = None):
