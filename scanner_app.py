@@ -151,18 +151,18 @@ def file_scan(fpath):
     harmless = False
     if int(stat['undetected']) > int(stat['harmless']) + int(stat['malicious']) + int(stat['suspicious']):
         undected = True
-        mal_file_report += f"File: {name}  was undetected {stat['undetected']} times by various scanners!"
+        mal_file_report += f"\nFile: {name}  was undetected {stat['undetected']} times by various scanners!"
         printv("\n[+]"+mal_file_report)
         printv("Should be ALERT!", color='RED')
     if int(stat['malicious'])>0:
-        mal_file_report += f"Url: {name}  was found malicous {stat['malicious']} times by various scanners!"
+        mal_file_report += f"\nUrl: {name}  was found malicous {stat['malicious']} times by various scanners!"
         printv("\n[+]"+mal_file_report, color='RED')
         mal_found = True
     if int(stat['suspicious']) > 0:
-        mal_file_report += f"Url: {name}  was found suspicious {stat['suspicious']} times by various scanners!"
+        mal_file_report += f"\nUrl: {name}  was found suspicious {stat['suspicious']} times by various scanners!"
         printv("\n[+]"+mal_file_report, color='RED')
     if int(stat['harmless']) > int(stat['undetected']) + int(stat['malicious']) + int(stat['suspicious']):
-        mal_file_report += f"Url: {name}  was found harmless {stat['harmless']} times by various scanners!"
+        mal_file_report += f"\nUrl: {name}  was found harmless {stat['harmless']} times by various scanners!"
         printv("\n[+]"+mal_file_report, color="GREEN")
     
 

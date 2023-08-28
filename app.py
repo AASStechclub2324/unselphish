@@ -81,12 +81,14 @@ def report_display():
         # return render_template('report.html', output=output)
     if report_thread.is_alive():
         return render_template('load.html', redirect_url = '/scan-report')
-    else:
+    elif not report_thread.is_alive():
         output = report
         session['report'] = output
         output = output.splitlines()
         session['category'] = category
         return render_template('report.html', output=output)
+    else:
+        print("Error")
 
 
 def generate_report(sc_type: int, input_var, auth = None):
