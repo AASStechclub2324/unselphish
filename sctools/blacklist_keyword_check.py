@@ -1,4 +1,3 @@
-from printv import printv
 
 def check_blacklisted_keywords(text):
     blacklisted_terms = []
