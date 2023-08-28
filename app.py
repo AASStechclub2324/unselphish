@@ -6,7 +6,7 @@ from features.threat_leaderboard import generate_leaderboard
 
 
 #variables
-upload = r'\uploads'
+upload = r'uploads'
 report = None
 category = None
 
