@@ -2,7 +2,7 @@ from printv import printv
 
 def check_blacklisted_keywords(text):
     blacklisted_terms = []
-    with open(".\\resources\\blacklist.txt", "r") as blklist:
+    with open(r"resources\blacklist.txt", "r") as blklist:
         blacklisted_terms = blklist.readlines()
     for i in range(len(blacklisted_terms)):
         blacklisted_terms[i] = blacklisted_terms[i].lower().strip("\n").strip()
