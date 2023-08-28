@@ -107,13 +107,11 @@ def generate_report(sc_type: int, input_var, auth = None):
         category = 'MALICIOUS EMAIL'
         
     if sc_type == 3:
-
         msg2scan = input_var
         report = single_scan(msg2scan)
         category = 'MALICIOUS MESSAGE'
 
     if sc_type == 4:
-    
         chattxt = input_var
         report = whatsapp_scan(chattxt, auth)
         category = 'MALICIOUS WHATSAPP'

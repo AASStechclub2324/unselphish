@@ -1,5 +1,5 @@
 import virustotal_python
-from sctools.printv import printv
+# from sctools.printv import printv
 import os
 from base64 import urlsafe_b64encode
 import requests
@@ -25,7 +25,6 @@ def active_scanlink(url):
 def active_scandomain(url):
     with virustotal_python.Virustotal(api_key) as vtotal:
         resp = vtotal.request(f"domains/{url}")
-        printv(resp.data)
 
 def active_scanfile(filepath):
     url = 'https://www.virustotal.com/vtapi/v2/file/scan'

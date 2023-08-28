@@ -1,7 +1,7 @@
 import sctools.emlfilescan as emlscan
 import sctools.virustotal as vt
 import blacklist_keyword_check as blacklist
-from sctools.printv import printv
+# from sctools.# printv import # printv
 import re
 import sys
 import model_exe
@@ -24,25 +24,25 @@ def scan_link(url2scan):
         if int(stat['undetected']) > int(stat['harmless']) + int(stat['malicious']) + int(stat['suspicious']):
             undetected = True
             mal_link_report += f"\nUrl: {url2scan}  was undetected {stat['undetected']} times by various scanners!"
-            printv("\n[+]"+mal_link_report)
-            printv("Should be ALERT!", color='RED')
+            # printv("\n[+]"+mal_link_report)
+            # printv("Should be ALERT!", color='RED')
         if int(stat['malicious'])>0:
             mal_link_report += f"\nUrl: {url2scan}  was found malicous {stat['malicious']} times by various scanners!"
-            printv("\n[+]"+mal_link_report, color='RED')
+            # printv("\n[+]"+mal_link_report, color='RED')
             mal_found = True
         if int(stat['suspicious']) > 0:
             mal_link_report += f"\nUrl: {url2scan}  was found suspicious {stat['suspicious']} times by various scanners!"
-            printv("\n[+]"+mal_link_report, color='RED')
+            # printv("\n[+]"+mal_link_report, color='RED')
             sus_found = True
         if int(stat['harmless']) > int(stat['undetected']) + int(stat['malicious']) + int(stat['suspicious']):
             mal_link_report += f"\nUrl: {url2scan}  was found harmless {stat['harmless']} times by various scanners!"
-            printv("\n[+]"+mal_link_report, color="GREEN")
+            # printv("\n[+]"+mal_link_report, color="GREEN")
             harmless = True
         
 
         if not mal_found and not undetected and not sus_found:
             mal_link_report += f"\nUrl: {url2scan}  was not found explicitly malicous!"
-            printv(mal_link_report)
+            # printv(mal_link_report)
 
         link_report = f"""
         Initial Scan Report(Votes): {total_votes}
@@ -58,8 +58,8 @@ def scan_link(url2scan):
 
 def eml_scan(emlfile):
     email_subject, received_from_addr, received_from_ip, reply_to, emailtext, links_in_email = emlscan.parse_eml(emlfile)
-    printv(f"""[+]Sender's Email Address: {received_from_addr}
-\n[+]Sender's IP: {received_from_ip}""")
+    # printv(f"""[+]Sender's Email Address: {received_from_addr}
+# \n[+]Sender's IP: {received_from_ip}""")
     report = complete_scan_text([email_subject + " " + emailtext], linklist=links_in_email)
     eml_report = f"""[+]Sender's Email Address: {received_from_addr}
 \n[+]Sender's IP: {received_from_ip}
@@ -106,7 +106,7 @@ def single_scan(msg2scan):
     #################################### DATA CLEANING END ######################################
 
     report = complete_scan_text([msg2scan], links_in_chatmessage)
-    printv(report)
+    # printv(report)
     return report
 
 
@@ -152,23 +152,23 @@ def file_scan(fpath):
     if int(stat['undetected']) > int(stat['harmless']) + int(stat['malicious']) + int(stat['suspicious']):
         undected = True
         mal_file_report += f"\nFile: {name}  was undetected {stat['undetected']} times by various scanners!"
-        printv("\n[+]"+mal_file_report)
-        printv("Should be ALERT!", color='RED')
+        # printv("\n[+]"+mal_file_report)
+        # printv("Should be ALERT!", color='RED')
     if int(stat['malicious'])>0:
         mal_file_report += f"\nUrl: {name}  was found malicous {stat['malicious']} times by various scanners!"
-        printv("\n[+]"+mal_file_report, color='RED')
+        # printv("\n[+]"+mal_file_report, color='RED')
         mal_found = True
     if int(stat['suspicious']) > 0:
         mal_file_report += f"\nUrl: {name}  was found suspicious {stat['suspicious']} times by various scanners!"
-        printv("\n[+]"+mal_file_report, color='RED')
+        # printv("\n[+]"+mal_file_report, color='RED')
     if int(stat['harmless']) > int(stat['undetected']) + int(stat['malicious']) + int(stat['suspicious']):
         mal_file_report += f"\nUrl: {name}  was found harmless {stat['harmless']} times by various scanners!"
-        printv("\n[+]"+mal_file_report, color="GREEN")
+        # printv("\n[+]"+mal_file_report, color="GREEN")
     
 
     if not mal_found and not undetected and not sus_found:
         mal_file_report += f"\nFile: {name}  was not found explicitly malicous!"
-        printv(mal_file_report)
+        # printv(mal_file_report)
 
     file_report = f"""Virustotal Scan Report:
     \n[+]File Name: {name}
@@ -188,7 +188,7 @@ def complete_scan_text(text_list=[], linklist=[]):
     blacklistedwords, blacklistedwordscnt = blacklist.check_blacklisted_keywords(text)
     if len(linklist) == 0:
         linklist = re.findall('http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\), ]|(?:%[0-9a-fA-F][0-9a-fA-F]))+',text)
-    printv("")
+    # printv("")
     print("\n[+] SCANNING FOUND LINKS")
     mallinks = []
     suslinks = []
@@ -205,9 +205,9 @@ def complete_scan_text(text_list=[], linklist=[]):
                 mallinks.append(f"\nLink Reported malicious: {int(stat['malicious'])} times\n" + link)
             if int(stat['suspicious']) > 0:
                 suslinks.append(f"\nLink Reported suspicious: {int(stat['suspicious'])} times\n" + link)
-    printv()
+    # printv()
 
-    printv(f"\n[+] No. of links scanned: {linksscannedcount}")
+    # printv(f"\n[+] No. of links scanned: {linksscannedcount}")
     iplist = []
     iplinks = []
     try:
@@ -217,7 +217,8 @@ def complete_scan_text(text_list=[], linklist=[]):
             if ip:
                 iplinks.append(line)
     except Exception as e:
-        printv(e)
+        # printv(e)
+        print(e)
 
 
     rfc_output = model_exe.main_model(text_list)
@@ -226,7 +227,7 @@ def complete_scan_text(text_list=[], linklist=[]):
     # error = (abs(mean_spear-mean_rfc)/mean_rfc) * 100
     
     #threat index calculation
-    printv(f"AI prediction percentage of phishing attempt: {mean_rfc}%")
+    # printv(f"AI prediction percentage of phishing attempt: {mean_rfc}%")
     index = 10 - int((mean_rfc/100)*9)
         
 
@@ -237,28 +238,28 @@ def complete_scan_text(text_list=[], linklist=[]):
     suslink_found = ""
     ip_report = ""
     if len(blacklistedwords) > 0:
-        printv(f"\nVIRUSTOTAL SCAN RESULTS", color="RED")
-        printv(f"\nBlacklisted phrases found {blacklistedwordscnt} times", color="RED")
-        printv(f"\nBlacklisted phrases found:\n", color="RED")
+        # printv(f"\nVIRUSTOTAL SCAN RESULTS", color="RED")
+        # printv(f"\nBlacklisted phrases found {blacklistedwordscnt} times", color="RED")
+        # printv(f"\nBlacklisted phrases found:\n", color="RED")
         blacklistedwords = [x.strip() for x in blacklistedwords]
-        printv(blacklistedwords, color="RED")
+        # printv(blacklistedwords, color="RED")
         blacklist_report = f"""\nBlacklisted phrases found {blacklistedwordscnt} times
         \nBlacklisted phrases found:\n {blacklistedwords}
         """
     for i in suslinks:
-        printv(i, color="RED")
+        # printv(i, color="RED")
         suslink_found+=i
     for i in mallinks:
-        printv(i, color="RED")
+        # printv(i, color="RED")
         mallink_found+=i
     if len(mallinks) > 0:
-        printv("\n[**] WARNING!! THIS CONTAINS MALICIOUS ATTACHMENTS/LINKS.\n", color="RED")
+        # printv("\n[**] WARNING!! THIS CONTAINS MALICIOUS ATTACHMENTS/LINKS.\n", color="RED")
         mallink_alert = "\n[**] WARNING!! THIS CONTAINS MALICIOUS ATTACHMENTS/LINKS.\n"
     if len(iplist) > 0:
-        printv("\nIP ADDRESSES FOUND IN LINKS (SUSPICIOUS)\n", color="RED")
+        # printv("\nIP ADDRESSES FOUND IN LINKS (SUSPICIOUS)\n", color="RED")
         ip_report = f"\nIP ADDRESSES FOUND IN LINKS (SUSPICIOUS)\n"
         for ip in iplinks:
-            printv(ip, color="RED")
+            # printv(ip, color="RED")
             ip_report+="\n ip"
     
     ## ALERT PRINTING END ######################################################
