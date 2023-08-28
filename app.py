@@ -6,9 +6,13 @@ from features.threat_leaderboard import generate_leaderboard
 
 
 #variables
+global report
+global report_thread
 upload = r'uploads'
 report = None
 category = None
+report_thread = None
+
 
 app = Flask(__name__)
 app.secret_key = "asdfghjkdasdfghjklzxcvbhjkioerfghnujhbfvbvbnmfgbxcvgyuikerthv"
@@ -117,6 +121,7 @@ def generate_report(sc_type: int, input_var, auth = None):
 
 @app.route('/scan_link', methods=['GET', 'POST'])
 def sclink():
+    global report_thread
     link = request.form.get('scan_link')
     report_thread = threading.Thread(target=generate_report, args=(1, link))
     report_thread.start()
