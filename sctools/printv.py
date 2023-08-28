@@ -1,10 +1,10 @@
 from colorama import Fore, Back, Style
-from colorama import just_fix_windows_console
+# from colorama import just_fix_windows_console
 
-try:
-    just_fix_windows_console()
-except:
-    pass
+# try:
+#     just_fix_windows_console()
+# except:
+#     pass
 def printv(text="", verbose_dec=True, color="WHITE"):
     if verbose_dec == True:
         if color == "WHITE":
