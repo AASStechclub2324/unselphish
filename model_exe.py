@@ -75,39 +75,5 @@ def main_model(input_var):
 
 
 
-if __name__ == '__main__':
-    emails = ['your microsoft account has been compromised ,you must update before or else your account going to close click to update', 'Today we want to inform you that the application period for 15.000 free Udacity Scholarships in Data Science is now open! Please apply by November 16th, 2020 via https://www.udacity.com/bertelsmann-tech-scholarships.']
-    lebu = ["Guess what? You have been shortlisted to win a free HP Laptop. It is a one-time oppurtunity. Don't miss this!! Txt on 9876543234 to claim your reward", "Alert!! Win a free Apple watch today. Call at 0987657654 to claim your reward. Hurry! Don't Miss this one-time opportunity!!"]
-    test = ['''Subject: You have (3) failed email deliveries
-    Sender address: noreply@domain.com
-    Sender ip:
-    Reply_to:
-
-    ======================================================
-
-    you have (3) failed email deliveries verify your information to deliver your e-mails  brad@malware-traffic-analysis.net  retrieve your mails    please kindly retrieve your email
-
-    ======================================================''']
-    input_var = [lebu[0]]
-    print(main_model(input_var))
-    print("\n"+"-"*50)
-
-    input_var = [lebu[1]]
-    print(main_model(input_var))
-    print("\n"+"-"*50)
-
-    input_var = [emails[1]]
-    print(main_model(input_var))
-    print("\n"+"-"*50)
-
-    input_var = [emails[0]]
-    print(main_model(input_var))
-    print("\n"+"-"*50)
-
-    input_var = test
-    print(main_model(input_var))
-    print("\n"+"-"*50)
-
-
 
     

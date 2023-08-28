@@ -49,7 +49,4 @@ def parse_chat_file(filename):
     total_messages = df.shape[0]
     return df['Author'], df['Message']
 
-if __name__ == "__main__":
-    author, messages = parse_chat_file(r"C:\Users\USER\Desktop\Unselphish-root\Unselphish\resources\WhatsApp Chat with Mainak Dasgupta.txt")
-    print(author)
-    print(messages)
+

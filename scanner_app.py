@@ -1,6 +1,6 @@
 import sctools.emlfilescan as emlscan
 import sctools.virustotal as vt
-import blacklist_keyword_check as blacklist
+import sctools.blacklist_keyword_check as blacklist
 # from sctools.# printv import # printv
 import re
 import sys
@@ -152,23 +152,22 @@ def file_scan(fpath):
     if int(stat['undetected']) > int(stat['harmless']) + int(stat['malicious']) + int(stat['suspicious']):
         undected = True
         mal_file_report += f"\nFile: {name}  was undetected {stat['undetected']} times by various scanners!"
-        # printv("\n[+]"+mal_file_report)
-        # printv("Should be ALERT!", color='RED')
+
     if int(stat['malicious'])>0:
         mal_file_report += f"\nUrl: {name}  was found malicous {stat['malicious']} times by various scanners!"
-        # printv("\n[+]"+mal_file_report, color='RED')
+
         mal_found = True
     if int(stat['suspicious']) > 0:
         mal_file_report += f"\nUrl: {name}  was found suspicious {stat['suspicious']} times by various scanners!"
-        # printv("\n[+]"+mal_file_report, color='RED')
+
     if int(stat['harmless']) > int(stat['undetected']) + int(stat['malicious']) + int(stat['suspicious']):
         mal_file_report += f"\nUrl: {name}  was found harmless {stat['harmless']} times by various scanners!"
-        # printv("\n[+]"+mal_file_report, color="GREEN")
+
     
 
     if not mal_found and not undetected and not sus_found:
         mal_file_report += f"\nFile: {name}  was not found explicitly malicous!"
-        # printv(mal_file_report)
+
 
     file_report = f"""Virustotal Scan Report:
     \n[+]File Name: {name}
@@ -188,7 +187,7 @@ def complete_scan_text(text_list=[], linklist=[]):
     blacklistedwords, blacklistedwordscnt = blacklist.check_blacklisted_keywords(text)
     if len(linklist) == 0:
         linklist = re.findall('http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\), ]|(?:%[0-9a-fA-F][0-9a-fA-F]))+',text)
-    # printv("")
+
     print("\n[+] SCANNING FOUND LINKS")
     mallinks = []
     suslinks = []
@@ -205,9 +204,6 @@ def complete_scan_text(text_list=[], linklist=[]):
                 mallinks.append(f"\nLink Reported malicious: {int(stat['malicious'])} times\n" + link)
             if int(stat['suspicious']) > 0:
                 suslinks.append(f"\nLink Reported suspicious: {int(stat['suspicious'])} times\n" + link)
-    # printv()
-
-    # printv(f"\n[+] No. of links scanned: {linksscannedcount}")
     iplist = []
     iplinks = []
     try:
@@ -217,17 +213,17 @@ def complete_scan_text(text_list=[], linklist=[]):
             if ip:
                 iplinks.append(line)
     except Exception as e:
-        # printv(e)
+
         print(e)
 
 
     rfc_output = model_exe.main_model(text_list)
-    # mean_spear, high_spear, mesg_spear = spear_output
+
     mean_rfc, high_rfc, mesg_rfc = rfc_output
-    # error = (abs(mean_spear-mean_rfc)/mean_rfc) * 100
+
     
     #threat index calculation
-    # printv(f"AI prediction percentage of phishing attempt: {mean_rfc}%")
+
     index = 10 - int((mean_rfc/100)*9)
         
 
@@ -238,25 +234,23 @@ def complete_scan_text(text_list=[], linklist=[]):
     suslink_found = ""
     ip_report = ""
     if len(blacklistedwords) > 0:
-        # printv(f"\nVIRUSTOTAL SCAN RESULTS", color="RED")
-        # printv(f"\nBlacklisted phrases found {blacklistedwordscnt} times", color="RED")
-        # printv(f"\nBlacklisted phrases found:\n", color="RED")
+
         blacklistedwords = [x.strip() for x in blacklistedwords]
-        # printv(blacklistedwords, color="RED")
+
         blacklist_report = f"""\nBlacklisted phrases found {blacklistedwordscnt} times
         \nBlacklisted phrases found:\n {blacklistedwords}
         """
     for i in suslinks:
-        # printv(i, color="RED")
+
         suslink_found+=i
     for i in mallinks:
-        # printv(i, color="RED")
+
         mallink_found+=i
     if len(mallinks) > 0:
-        # printv("\n[**] WARNING!! THIS CONTAINS MALICIOUS ATTACHMENTS/LINKS.\n", color="RED")
+   
         mallink_alert = "\n[**] WARNING!! THIS CONTAINS MALICIOUS ATTACHMENTS/LINKS.\n"
     if len(iplist) > 0:
-        # printv("\nIP ADDRESSES FOUND IN LINKS (SUSPICIOUS)\n", color="RED")
+  
         ip_report = f"\nIP ADDRESSES FOUND IN LINKS (SUSPICIOUS)\n"
         for ip in iplinks:
             # printv(ip, color="RED")
@@ -292,57 +286,3 @@ def update_to_db(choice, report, category):
         db.update_db(data)
     # Database Update End ##
 
-
-
-################# Executable for CLI tool #######################
-
-if __name__ == "__main__":
-
-    message_scanned = False
-
-    try:
-        scantype = int(input('''1. Scan link (virustotal)\n2. Threat report from downloaded email (.eml)\n3. Scan singular message\n4. Threat report from exported whatsapp chat \n5. Scan file (virustotal)\n6. View Threat Leaderboard \nOption: '''))
-    except:
-        sys.exit(1)
-
-    if scantype == 1:
-        url2scan = str(input("Url: "))
-        report = scan_link(url2scan)
-        category = "link"
-
-    if scantype == 2:
-        emlfile = str(input(".eml file: "))
-        report = eml_scan(emlfile)
-        category = "emlfile"
-        
-    if scantype == 3:
-        msg2scan = str(input("Text message to scan: "))
-        report = single_scan(msg2scan)
-
-        category = "single_scan"
-
-    if scantype == 4:
-        chattxt = str(input("Filepath of whatsapp chat file(.txt): "))
-        auth = input("\nEnter message author to be scanned: ")
-        report = whatsapp_scan(chattxt, auth)
-        category = "whatsapp"
-
-
-    if scantype == 5:
-        fpath = str(input("Filepath of file to scan: "))
-        report = file_scan(fpath)
-        category = "filepath"
-    
-    try:
-        update_choice = input("Submit to database?[yes/no], Default = no:  ")
-        if update_choice.lower() == 'yes' or update_choice.lower() == 'y':
-            update_to_db(True, report, category)
-        else:
-            pass
-    except:
-        sys.exit(1)
-
-    if scantype == 6:
-        leaderboard = generate_leaderboard()
-        for i in leaderboard:
-            print(i+"\n")

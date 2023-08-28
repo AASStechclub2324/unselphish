@@ -64,21 +64,7 @@ def leaderboard():
 @app.route('/scan-report', methods=['GET', 'POST'])
 def report_display():
     global report_thread
-    # global report
-    # if report:
-    #     output = report
-    #     session['report'] = output
-    #     output = output.splitlines()
-    #     session['category'] = category
-    #     return render_template('report.html', output=output)
-    # else:
-    #     return render_template('load.html', redirect_url = '/scan-report')
-        # global report
-        # output = report
-        # session['report'] = output
-        # output = output.splitlines()
-        # session['category'] = category
-        # return render_template('report.html', output=output)
+
     if report_thread.is_alive():
         return render_template('load.html', redirect_url = '/scan-report')
     elif not report_thread.is_alive():
@@ -143,7 +129,7 @@ def scEmail():
         report_thread.start()
     else:
         output = "No .eml file uploaded."
-    # return render_template('load.html', redirect_url = '/scan-report')
+
     return redirect('/scan-report')
     
 
@@ -153,7 +139,7 @@ def scMsg():
     msg = request.form.get('scan_message')
     report_thread = threading.Thread(target=generate_report, args=(3, msg))
     report_thread.start()
-    # return render_template('load.html', redirect_url = '/scan-report')
+
     return redirect('/scan-report')
 
 @app.route('/scan_whatsapp', methods=['GET', 'POST'])
@@ -170,7 +156,7 @@ def scWhatsapp():
    
     else:
         output = "No WhatsApp file uploaded."
-    # return render_template('load.html', redirect_url = '/scan-report')
+
     return redirect('/scan-report')
 
 @app.route('/scan_file', methods=['GET', 'POST'])
@@ -186,7 +172,7 @@ def scFile():
         
     else:
         output = "No file uploaded."
-    # return render_template('load.html', redirect_url = '/scan-report')
+
     return redirect('/scan-report')
 
 @app.route('/submitToDatabase', methods=['GET', 'POST'])
@@ -202,4 +188,4 @@ def submitNo():
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    app.run(host='0.0.0.0', port=5000)

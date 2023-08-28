@@ -44,9 +44,3 @@ def active_scanfile(filepath):
         total_votes = report.data['attributes']['total_votes']
         return f_type, last_analysis_stats, total_votes, name, size
 
-
-
-
-if __name__ == '__main__':
-    print(active_scanlink('https://groups.google.com/'))
-    print(active_scanfile(r"C:\Users\Anutosh\Desktop\tree-736885_960_720.jpg"))
