@@ -147,7 +147,7 @@ def scWhatsapp():
         whatsapp_file.save(path)
         report_thread = threading.Thread(target=generate_report, args=(4, path, author))
         report_thread.start()
-        os.remove(path)
+   
     else:
         output = "No WhatsApp file uploaded."
     return render_template('load.html', redirect_url = '/scan-report')
@@ -162,7 +162,7 @@ def scFile():
         file.save(path)
         report_thread = threading.Thread(target=generate_report, args=(5, path))
         report_thread.start()
-        os.remove(path)
+        
     else:
         output = "No file uploaded."
     return render_template('load.html', redirect_url = '/scan-report')
