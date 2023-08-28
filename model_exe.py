@@ -53,7 +53,7 @@ def execute_spam_models(text):
     for ind in range(len(text)):
         msg = text[ind]
         msg = [msg]
-        model = pickle.load(open(fr'ai_ml/Spam_Model_RFC.sav', 'rb'))
+        model = pickle.load(open(fr'Spam_Model_RFC.sav', 'rb'))
         prediction = model.predict(msg)
         pred_percent = model.predict_proba(msg)
         percent = pred_percent[0][1]*100
