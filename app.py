@@ -131,6 +131,7 @@ def sclink():
 
 @app.route('/scan_email', methods=['GET', 'POST'])
 def scEmail():
+    global report_thread
     if 'email_report' in request.files:
         eml_file = request.files['email_report']
         filename = eml_file.filename
@@ -146,6 +147,7 @@ def scEmail():
 
 @app.route('/scan_singular_message', methods=['GET', 'POST'])
 def scMsg():
+    global report_thread
     msg = request.form.get('scan_message')
     report_thread = threading.Thread(target=generate_report, args=(3, msg))
     report_thread.start()
@@ -154,6 +156,7 @@ def scMsg():
 
 @app.route('/scan_whatsapp', methods=['GET', 'POST'])
 def scWhatsapp():
+    global report_thread
     author = request.form.get('author')
     if 'whatsapp_report' in request.files:
         whatsapp_file = request.files['whatsapp_report']
@@ -170,6 +173,7 @@ def scWhatsapp():
 
 @app.route('/scan_file', methods=['GET', 'POST'])
 def scFile():
+    global report_thread
     if 'scan_file' in request.files:
         file = request.files['scan_file']
         filename = file.filename
