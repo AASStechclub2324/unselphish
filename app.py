@@ -64,6 +64,7 @@ def leaderboard():
 
 @app.route('/scan-report', methods=['GET', 'POST'])
 def report_display():
+    global report_thread
     # global report
     # if report:
     #     output = report
@@ -79,7 +80,7 @@ def report_display():
         # output = output.splitlines()
         # session['category'] = category
         # return render_template('report.html', output=output)
-    if session['report_thread'].is_alive():
+    if report_thread.is_alive():
         return render_template('load.html', redirect_url = '/scan-report')
     else:
         global report
