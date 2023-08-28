@@ -83,7 +83,6 @@ def report_display():
     if report_thread.is_alive():
         return render_template('load.html', redirect_url = '/scan-report')
     else:
-        global report
         output = report
         session['report'] = output
         output = output.splitlines()
@@ -95,26 +94,31 @@ def generate_report(sc_type: int, input_var, auth = None):
     global report
     global category
     if sc_type == 1:
+        global report
         url2scan = input_var
         report = scan_link(url2scan)
         category = 'MALICIOUS LINK'
 
     if sc_type == 2:
+        global report
         emlfile = input_var
         report = eml_scan(emlfile)
         category = 'MALICIOUS EMAIL'
         
     if sc_type == 3:
+        global report
         msg2scan = input_var
         report = single_scan(msg2scan)
         category = 'MALICIOUS MESSAGE'
 
     if sc_type == 4:
+        global report
         chattxt = input_var
         report = whatsapp_scan(chattxt, auth)
         category = 'MALICIOUS WHATSAPP'
 
     if sc_type == 5:
+        global report
         fpath = input_var
         report = file_scan(fpath)
         category = 'MALICIOUS FILE'
