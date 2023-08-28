@@ -136,8 +136,8 @@ def scEmail():
         filename = eml_file.filename
         path = os.path.join(app.config['uploadFolder'], filename)
         eml_file.save(path)
-        session['report_thread'] = threading.Thread(target=generate_report, args=(2, path))
-        session['report_thread'].start()
+        report_thread = threading.Thread(target=generate_report, args=(2, path))
+        report_thread.start()
     else:
         output = "No .eml file uploaded."
     # return render_template('load.html', redirect_url = '/scan-report')
@@ -147,8 +147,8 @@ def scEmail():
 @app.route('/scan_singular_message', methods=['GET', 'POST'])
 def scMsg():
     msg = request.form.get('scan_message')
-    session['report_thread'] = threading.Thread(target=generate_report, args=(3, msg))
-    session['report_thread'].start()
+    report_thread = threading.Thread(target=generate_report, args=(3, msg))
+    report_thread.start()
     # return render_template('load.html', redirect_url = '/scan-report')
     return redirect('/scan-report')
 
@@ -160,8 +160,8 @@ def scWhatsapp():
         filename = whatsapp_file.filename
         path = os.path.join(app.config['uploadFolder'], filename)
         whatsapp_file.save(path)
-        session['report_thread'] = threading.Thread(target=generate_report, args=(4, path, author))
-        session['report_thread'].start()
+        report_thread = threading.Thread(target=generate_report, args=(4, path, author))
+        report_thread.start()
    
     else:
         output = "No WhatsApp file uploaded."
@@ -175,8 +175,8 @@ def scFile():
         filename = file.filename
         path = os.path.join(app.config['uploadFolder'], filename)
         file.save(path)
-        session['report_thread'] = threading.Thread(target=generate_report, args=(5, path))
-        session['report_thread'].start()
+        report_thread = threading.Thread(target=generate_report, args=(5, path))
+        report_thread.start()
         
     else:
         output = "No file uploaded."
