@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 import emoji
 from collections import Counter
-from printv import printv
+from sctools.printv import printv
 
 
 def find_author(s):

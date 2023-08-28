@@ -1,6 +1,6 @@
 import yara
 import glob
-from printv import printv
+from sctools.printv import printv
 import os
 
 def load_rules():

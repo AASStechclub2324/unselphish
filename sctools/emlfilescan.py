@@ -7,7 +7,7 @@ from pprint import pprint
 from email import policy, message_from_file
 from email.parser import Parser
 import re
-from printv import printv
+from sctools.printv import printv
 
 def json_serial(obj):
     if isinstance(obj, datetime.datetime):

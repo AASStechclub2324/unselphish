@@ -1,5 +1,5 @@
 import virustotal_python
-from printv import printv
+from sctools.printv import printv
 import os
 from base64 import urlsafe_b64encode
 import requests
