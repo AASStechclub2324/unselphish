@@ -60,21 +60,30 @@ def leaderboard():
 
 @app.route('/scan-report', methods=['GET', 'POST'])
 def report_display():
-    global report
-    if report:
-        output = report
-        session['report'] = output
-        output = output.splitlines()
-        session['category'] = category
-        return render_template('report.html', output=output)
-    else:
-        return render_template('load.html', redirect_url = '/scan-report')
+    # global report
+    # if report:
+    #     output = report
+    #     session['report'] = output
+    #     output = output.splitlines()
+    #     session['category'] = category
+    #     return render_template('report.html', output=output)
+    # else:
+    #     return render_template('load.html', redirect_url = '/scan-report')
         # global report
         # output = report
         # session['report'] = output
         # output = output.splitlines()
         # session['category'] = category
         # return render_template('report.html', output=output)
+    if session['report_thread'].is_alive():
+        return render_template('load.html', redirect_url = '/scan-report')
+    else:
+        global report
+        output = report
+        session['report'] = output
+        output = output.splitlines()
+        session['category'] = category
+        return render_template('report.html', output=output)
 
 
 def generate_report(sc_type: int, input_var, auth = None):
@@ -106,7 +115,6 @@ def generate_report(sc_type: int, input_var, auth = None):
         category = 'MALICIOUS FILE'
     
 
-
 @app.route('/scan_link', methods=['GET', 'POST'])
 def sclink():
     link = request.form.get('scan_link')
@@ -122,20 +130,21 @@ def scEmail():
         filename = eml_file.filename
         path = os.path.join(app.config['uploadFolder'], filename)
         eml_file.save(path)
-        report_thread = threading.Thread(target=generate_report, args=(2, path))
-        report_thread.start()
-        os.remove(path)
+        session['report_thread'] = threading.Thread(target=generate_report, args=(2, path))
+        session['report_thread'].start()
     else:
         output = "No .eml file uploaded."
-    return render_template('load.html', redirect_url = '/scan-report')
+    # return render_template('load.html', redirect_url = '/scan-report')
+    return redirect('/scan-report')
     
 
 @app.route('/scan_singular_message', methods=['GET', 'POST'])
 def scMsg():
     msg = request.form.get('scan_message')
-    report_thread = threading.Thread(target=generate_report, args=(3, msg))
-    report_thread.start()
-    return render_template('load.html', redirect_url = '/scan-report')
+    session['report_thread'] = threading.Thread(target=generate_report, args=(3, msg))
+    session['report_thread'].start()
+    # return render_template('load.html', redirect_url = '/scan-report')
+    return redirect('/scan-report')
 
 @app.route('/scan_whatsapp', methods=['GET', 'POST'])
 def scWhatsapp():
@@ -145,13 +154,13 @@ def scWhatsapp():
         filename = whatsapp_file.filename
         path = os.path.join(app.config['uploadFolder'], filename)
         whatsapp_file.save(path)
-        report_thread = threading.Thread(target=generate_report, args=(4, path, author))
-        report_thread.start()
+        session['report_thread'] = threading.Thread(target=generate_report, args=(4, path, author))
+        session['report_thread'].start()
    
     else:
         output = "No WhatsApp file uploaded."
-    return render_template('load.html', redirect_url = '/scan-report')
-
+    # return render_template('load.html', redirect_url = '/scan-report')
+    return redirect('/scan-report')
 
 @app.route('/scan_file', methods=['GET', 'POST'])
 def scFile():
@@ -160,12 +169,13 @@ def scFile():
         filename = file.filename
         path = os.path.join(app.config['uploadFolder'], filename)
         file.save(path)
-        report_thread = threading.Thread(target=generate_report, args=(5, path))
-        report_thread.start()
+        session['report_thread'] = threading.Thread(target=generate_report, args=(5, path))
+        session['report_thread'].start()
         
     else:
         output = "No file uploaded."
-    return render_template('load.html', redirect_url = '/scan-report')
+    # return render_template('load.html', redirect_url = '/scan-report')
+    return redirect('/scan-report')
 
 @app.route('/submitToDatabase', methods=['GET', 'POST'])
 def submitYes():
