@@ -100,13 +100,13 @@ def generate_report(sc_type: int, input_var, auth = None):
         category = 'MALICIOUS LINK'
 
     if sc_type == 2:
-        global report
+
         emlfile = input_var
         report = eml_scan(emlfile)
         category = 'MALICIOUS EMAIL'
         
     if sc_type == 3:
-        global report
+
         msg2scan = input_var
         report = single_scan(msg2scan)
         category = 'MALICIOUS MESSAGE'
@@ -118,7 +118,6 @@ def generate_report(sc_type: int, input_var, auth = None):
         category = 'MALICIOUS WHATSAPP'
 
     if sc_type == 5:
-        global report
         fpath = input_var
         report = file_scan(fpath)
         category = 'MALICIOUS FILE'
