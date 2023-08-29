@@ -30,6 +30,10 @@ def index():
 def about():
     return render_template('about.html')
 
+@app.route('/how_to_use', methods=['GET', 'POST'])
+def how_to():
+    return render_template('howto.html')
+
 @app.route('/credits', methods=['GET', 'POST'])
 def credits():
     return render_template('credits.html')
@@ -87,7 +91,6 @@ def generate_report(sc_type: int, input_var, auth = None):
         category = 'MALICIOUS LINK'
 
     if sc_type == 2:
-
         emlfile = input_var
         report = eml_scan(emlfile)
         category = 'MALICIOUS EMAIL'

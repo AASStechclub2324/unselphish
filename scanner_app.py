@@ -1,6 +1,6 @@
 import sctools.emlfilescan as emlscan
 import sctools.virustotal as vt
-import sctools.blacklist_keyword_check as blacklist
+import blacklist_keyword_check as blacklist
 # from sctools.# printv import # printv
 import re
 import sys
