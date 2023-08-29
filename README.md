@@ -24,7 +24,7 @@ Welcome to Unselphish, your ultimate defense against spam and phishing attacks i
 
 ## Get Started
 
-1. **Visit The URL**: Begin by visiting the following URL: [url](https://unselphish.onrender.com)
+1. **Visit The URL**: Begin by visiting the following URL: [https://unselphish.onrender.com](https://unselphish.onrender.com)
 2. **Provide Input**: Access the web app through your browser and submit the information you want to analyze for potential threats.
 
 ## Troubleshooting
